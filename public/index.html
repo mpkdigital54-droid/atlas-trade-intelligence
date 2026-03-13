@@ -1272,7 +1272,181 @@
     opacity: 1;
     transform: translateY(0);
   }
-</style>
+
+  /* ─── HAMBURGER BUTTON (hidden on desktop) ─── */
+  .nav-mobile-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+    background: none;
+    border: none;
+    flex-shrink: 0;
+  }
+  .nav-mobile-toggle span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--white);
+    transition: all 0.25s;
+    border-radius: 2px;
+  }
+  .nav-mobile-open .nav-mobile-toggle span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-mobile-open .nav-mobile-toggle span:nth-child(2) { opacity: 0; }
+  .nav-mobile-open .nav-mobile-toggle span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* ─── MOBILE MENU OVERLAY ─── */
+  .mobile-menu-open {
+    display: flex !important;
+    flex-direction: column !important;
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: rgba(6,24,40,0.98) !important;
+    backdrop-filter: blur(20px) !important;
+    padding: 16px !important;
+    gap: 2px !important;
+    border-bottom: 1px solid var(--border) !important;
+    z-index: 99 !important;
+    width: 100% !important;
+  }
+  .mobile-menu-open li { width: 100% !important; }
+  .mobile-menu-open a {
+    padding: 14px 16px !important;
+    font-size: 15px !important;
+    border-radius: 6px !important;
+    display: block !important;
+    width: 100% !important;
+  }
+  .mobile-menu-open .nav-cta {
+    margin-top: 8px !important;
+    display: block !important;
+    text-align: center !important;
+  }
+
+  /* ─── TABLET & MOBILE: hide nav links, show hamburger ─── */
+  @media (max-width: 900px) {
+    nav { padding: 0 20px; height: 60px; }
+    .nav-links { display: none; }
+    .nav-mobile-toggle { display: flex; }
+    .section-inner { padding: 0 20px; }
+
+    /* Hero */
+    .hero { padding: 80px 20px 200px; min-height: 100vh; }
+    .trade-lines { display: none; }
+    .hero-glow { width: 280px; height: 280px; right: -60px; }
+    .hero-glow-gold { display: none; }
+    .hero h1 { font-size: clamp(36px, 9vw, 56px); }
+    .hero-desc { font-size: 15px; max-width: 100%; }
+    .hero-actions { flex-direction: column; gap: 12px; }
+    .btn-primary, .btn-secondary { width: 100%; justify-content: center; padding: 15px 20px; }
+
+    /* Stats bar — stack 2x2 */
+    .hero-stats {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      flex: 1 1 50%;
+      padding: 16px 20px;
+      border-right: none !important;
+      border-bottom: 1px solid var(--border);
+    }
+    .stat-item:nth-child(1),
+    .stat-item:nth-child(3) { border-right: 1px solid var(--border) !important; }
+    .stat-item:nth-child(3),
+    .stat-item:nth-child(4) { border-bottom: none; }
+    .stat-value { font-size: 22px; }
+
+    /* Sections */
+    .dual-mandate { padding: 72px 0; }
+    .instruments  { padding: 72px 0; }
+    .commodities  { padding: 72px 0; }
+    .payment-systems { padding: 72px 0; }
+    .geography    { padding: 72px 0; }
+    .why-us       { padding: 72px 0; }
+    .contact      { padding: 72px 0; }
+    .partners     { padding: 48px 0; }
+
+    .section-title { font-size: clamp(28px, 6vw, 42px); }
+
+    /* Dual mandate */
+    .mandate-grid { grid-template-columns: 1fr; gap: 3px; }
+    .mandate-card { padding: 36px 28px; }
+    .mandate-title { font-size: 26px; }
+
+    /* Instruments */
+    .instruments-layout { grid-template-columns: 1fr; gap: 32px; }
+    .instruments-sidebar { position: static; }
+    .instruments-nav { flex-direction: row; flex-wrap: wrap; gap: 4px; margin-top: 16px; }
+    .instruments-nav li { flex: 0 0 auto; }
+    .instruments-nav li button {
+      border-left: none;
+      border-bottom: 2px solid transparent;
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+    .instruments-nav li button.active {
+      border-left: none;
+      border-bottom-color: var(--teal);
+      background: var(--teal-dim);
+    }
+    .instrument-grid { grid-template-columns: 1fr; }
+
+    /* Commodities */
+    .commodities-tabs { width: 100%; flex-direction: column; }
+    .tab-btn { width: 100%; text-align: left; border-radius: 4px; padding: 12px 16px; }
+    .commodities-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
+    .commodity-item { font-size: 12px; padding: 12px; }
+
+    /* Payment systems */
+    .systems-grid { grid-template-columns: 1fr; }
+
+    /* Geography */
+    .geo-layout { grid-template-columns: 1fr; gap: 3px; }
+
+    /* Why us */
+    .pillars-grid { grid-template-columns: 1fr; gap: 3px; }
+    .pillar { padding: 32px 24px; }
+
+    /* Contact — FULL WIDTH single column */
+    .contact-layout {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .contact-left { width: 100%; }
+    .contact-form { padding: 28px 20px; width: 100%; }
+    .form-row { grid-template-columns: 1fr; gap: 0; }
+
+    /* Footer */
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer-inner { padding: 0 20px; }
+    .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
+    .footer-compliance { justify-content: center; flex-wrap: wrap; }
+  }
+
+  /* ─── SMALL PHONES: 480px ─── */
+  @media (max-width: 480px) {
+    nav { padding: 0 16px; }
+    .logo-text .brand { font-size: 17px; }
+    .section-inner { padding: 0 16px; }
+    .hero { padding: 76px 16px 220px; }
+    .hero h1 { font-size: 34px; }
+    .stat-value { font-size: 19px; }
+    .stat-label { font-size: 10px; }
+    .commodities-grid { grid-template-columns: 1fr 1fr; }
+    .footer-top { grid-template-columns: 1fr; gap: 28px; }
+    .footer-inner { padding: 0 16px; }
+    .contact-form { padding: 24px 16px; }
+    .mandate-card { padding: 28px 20px; }
+    .pillar { padding: 28px 20px; }
+    .system-card { padding: 24px 18px; }
+  }
 </head>
 <body>
 
@@ -1294,14 +1468,17 @@
       <span class="sub">Intelligence</span>
     </div>
   </a>
-  <ul class="nav-links">
-    <li><a href="#mandate">Services</a></li>
-    <li><a href="#instruments">Instruments</a></li>
-    <li><a href="#commodities">Commodities</a></li>
-    <li><a href="#systems">Payment Systems</a></li>
-    <li><a href="#geography">Regions</a></li>
-    <li><a href="#contact" class="nav-cta">Connect</a></li>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#mandate" onclick="closeMenu()">Services</a></li>
+    <li><a href="#instruments" onclick="closeMenu()">Instruments</a></li>
+    <li><a href="#commodities" onclick="closeMenu()">Commodities</a></li>
+    <li><a href="#systems" onclick="closeMenu()">Payment Systems</a></li>
+    <li><a href="#geography" onclick="closeMenu()">Regions</a></li>
+    <li><a href="#contact" class="nav-cta" onclick="closeMenu()">Connect</a></li>
   </ul>
+  <button class="nav-mobile-toggle" id="nav-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- ─── HERO ─── -->
@@ -2026,6 +2203,33 @@
 </footer>
 
 <script>
+// Mobile nav toggle
+function toggleMenu() {
+  const navLinks = document.getElementById('nav-links');
+  const toggle = document.getElementById('nav-toggle');
+  const isOpen = navLinks.classList.contains('mobile-menu-open');
+  if (isOpen) {
+    navLinks.classList.remove('mobile-menu-open');
+    toggle.setAttribute('aria-expanded', 'false');
+  } else {
+    navLinks.classList.add('mobile-menu-open');
+    toggle.setAttribute('aria-expanded', 'true');
+  }
+}
+
+function closeMenu() {
+  const navLinks = document.getElementById('nav-links');
+  const toggle = document.getElementById('nav-toggle');
+  navLinks.classList.remove('mobile-menu-open');
+  if (toggle) toggle.setAttribute('aria-expanded', 'false');
+}
+
+// Close menu on outside click
+document.addEventListener('click', function(e) {
+  const nav = document.querySelector('nav');
+  if (!nav.contains(e.target)) closeMenu();
+});
+
 // Instrument panel switcher
 function showPanel(id, btn) {
   document.querySelectorAll('.instrument-panel').forEach(p => p.classList.remove('active'));
