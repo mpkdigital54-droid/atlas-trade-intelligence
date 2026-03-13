@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas Trade Intelligence — Global Trade & Financial Clearance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0A2540;
+    --navy-deep: #061828;
+    --navy-mid: #0d3259;
+    --teal: #00A8A8;
+    --teal-light: #00c8c8;
+    --teal-dim: rgba(0,168,168,0.15);
+    --gold: #F5A623;
+    --gold-dim: rgba(245,166,35,0.12);
+    --white: #FFFFFF;
+    --gray-bg: #F4F6F8;
+    --gray-light: #E8ECF0;
+    --gray-mid: #8A9BB0;
+    --gray-text: #4A5B6E;
+    --border: rgba(255,255,255,0.08);
+    --border-light: rgba(10,37,64,0.1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy-deep);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 60px;
+    height: 72px;
+    background: rgba(6,24,40,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    position: relative;
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .logo-text .brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.02em;
+  }
+
+  .logo-text .sub {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--gray-mid);
+    text-decoration: none;
+    transition: color 0.2s;
+    text-transform: uppercase;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: var(--teal) !important;
+    color: var(--navy-deep) !important;
+    padding: 9px 22px !important;
+    border-radius: 4px;
+    font-weight: 500 !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--teal-light) !important; }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 60px 80px;
+    overflow: hidden;
+  }
+
+  /* Animated globe/grid background */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,168,168,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,168,168,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 70% 50%, black 20%, transparent 80%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    right: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,168,168,0.12) 0%, rgba(0,168,168,0.04) 40%, transparent 70%);
+  }
+
+  .hero-glow-gold {
+    position: absolute;
+    right: 200px;
+    top: 30%;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,166,35,0.07) 0%, transparent 70%);
+  }
+
+  /* Animated trade route lines */
+  .trade-lines {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 500px;
+    height: 400px;
+    opacity: 0.6;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+  }
+
+  .hero-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .eyebrow-line {
+    width: 32px;
+    height: 1px;
+    background: var(--teal);
+  }
+
+  .eyebrow-text {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 6vw, 80px);
+    font-weight: 300;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--teal);
+  }
+
+  .hero h1 .gold { color: var(--gold); font-style: normal; }
+
+  .hero-desc {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.65);
+    max-width: 520px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--teal);
+    color: var(--navy-deep);
+    padding: 14px 30px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover {
+    background: var(--teal-light);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: transparent;
+    color: var(--white);
+    padding: 14px 30px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* Hero stats ticker */
+  .hero-stats {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid var(--border);
+    display: flex;
+    background: rgba(6,24,40,0.6);
+    backdrop-filter: blur(10px);
+    animation: fadeUp 0.8s 0.5s ease both;
+  }
+
+  .stat-item {
+    flex: 1;
+    padding: 24px 40px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--white);
+    letter-spacing: -0.02em;
+  }
+
+  .stat-value span { color: var(--teal); }
+
+  .stat-label {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+  }
+
+  /* ─── TICKER TAPE ─── */
+  .ticker-wrap {
+    background: var(--teal-dim);
+    border-top: 1px solid rgba(0,168,168,0.2);
+    border-bottom: 1px solid rgba(0,168,168,0.2);
+    padding: 10px 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ticker-track {
+    display: flex;
+    gap: 0;
+    animation: ticker 40s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 32px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--gray-mid);
+    border-right: 1px solid rgba(0,168,168,0.2);
+  }
+
+  .ticker-item .symbol { color: var(--white); font-weight: 500; }
+  .ticker-item .up { color: #22c55e; }
+  .ticker-item .down { color: #ef4444; }
+
+  /* ─── SECTION BASE ─── */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .section-header {
+    margin-bottom: 60px;
+  }
+
+  .section-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .section-eyebrow .line {
+    width: 24px;
+    height: 1px;
+    background: var(--teal);
+  }
+
+  .section-eyebrow span {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 4vw, 54px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--white);
+  }
+
+  .section-title em { font-style: italic; color: var(--teal); }
+
+  .section-subtitle {
+    margin-top: 16px;
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    max-width: 560px;
+    line-height: 1.7;
+  }
+
+  /* ─── DUAL MANDATE SECTION ─── */
+  .dual-mandate {
+    padding: 100px 0;
+    background: linear-gradient(180deg, var(--navy-deep) 0%, #081e34 100%);
+  }
+
+  .mandate-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 60px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .mandate-card {
+    background: rgba(255,255,255,0.02);
+    padding: 56px 48px;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .mandate-card:hover {
+    background: rgba(255,255,255,0.04);
+  }
+
+  .mandate-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .mandate-card.trade::before { background: var(--teal); }
+  .mandate-card.finance::before { background: var(--gold); }
+
+  .mandate-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+    font-size: 22px;
+  }
+
+  .mandate-card.trade .mandate-icon { background: var(--teal-dim); }
+  .mandate-card.finance .mandate-icon { background: var(--gold-dim); }
+
+  .mandate-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .mandate-card.trade .mandate-label { color: var(--teal); }
+  .mandate-card.finance .mandate-label { color: var(--gold); }
+
+  .mandate-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+
+  .mandate-desc {
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 32px;
+  }
+
+  .mandate-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .mandate-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+  }
+
+  .mandate-list li::before {
+    content: '—';
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .mandate-card.trade .mandate-list li::before { color: var(--teal); }
+  .mandate-card.finance .mandate-list li::before { color: var(--gold); }
+
+  /* ─── FINANCIAL INSTRUMENTS ─── */
+  .instruments {
+    padding: 100px 0;
+    background: var(--navy-deep);
+  }
+
+  .instruments-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  .instruments-sidebar {
+    position: sticky;
+    top: 100px;
+  }
+
+  .instruments-nav {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 32px;
+  }
+
+  .instruments-nav li button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 14px 20px;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+
+  .instruments-nav li button:hover {
+    color: var(--white);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .instruments-nav li button.active {
+    color: var(--teal);
+    background: var(--teal-dim);
+    border-left-color: var(--teal);
+  }
+
+  .instruments-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .instrument-panel { display: none; }
+  .instrument-panel.active { display: block; }
+
+  .instrument-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 3px;
+  }
+
+  .instrument-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .instrument-card:hover {
+    background: rgba(0,168,168,0.06);
+    border-color: rgba(0,168,168,0.2);
+    transform: translateY(-2px);
+  }
+
+  .instrument-card-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .instrument-card-desc {
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .instrument-tag {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    background: var(--teal-dim);
+    color: var(--teal);
+  }
+
+  /* ─── COMMODITIES ─── */
+  .commodities {
+    padding: 100px 0;
+    background: linear-gradient(180deg, #081e34 0%, var(--navy-deep) 100%);
+  }
+
+  .commodities-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 40px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px;
+    width: fit-content;
+  }
+
+  .tab-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.45);
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+
+  .tab-btn.active {
+    background: var(--teal);
+    color: var(--navy-deep);
+    font-weight: 500;
+  }
+
+  .commodities-panel { display: none; }
+  .commodities-panel.active { display: block; }
+
+  .commodities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 2px;
+  }
+
+  .commodity-item {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border);
+    padding: 16px 18px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    transition: all 0.15s;
+    cursor: default;
+  }
+
+  .commodity-item:hover {
+    background: rgba(0,168,168,0.08);
+    border-color: rgba(0,168,168,0.25);
+    color: var(--white);
+  }
+
+  .commodity-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+    width: 20px;
+  }
+
+  /* ─── PAYMENT SYSTEMS ─── */
+  .payment-systems {
+    padding: 100px 0;
+    background: var(--navy-deep);
+  }
+
+  .systems-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    margin-top: 60px;
+  }
+
+  .system-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 36px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+
+  .system-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--teal), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .system-card:hover {
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-3px);
+  }
+
+  .system-card:hover::after { opacity: 1; }
+
+  .system-code {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .system-name {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--white);
+    margin-bottom: 10px;
+  }
+
+  .system-desc {
+    font-size: 13px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .system-region {
+    margin-top: 20px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .region-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+  }
+
+  /* ─── GEOGRAPHIC FOCUS ─── */
+  .geography {
+    padding: 100px 0;
+    background: linear-gradient(180deg, var(--navy-deep) 0%, #061828 100%);
+  }
+
+  .geo-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 3px;
+    margin-top: 60px;
+  }
+
+  .geo-region {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .geo-region-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .geo-flag {
+    font-size: 20px;
+  }
+
+  .geo-region-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--white);
+  }
+
+  .geo-countries {
+    padding: 20px 28px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .geo-country {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    transition: color 0.2s;
+  }
+
+  .geo-country:last-child { border-bottom: none; }
+
+  .geo-country:hover { color: var(--white); }
+
+  .geo-country-flag { font-size: 16px; }
+
+  /* ─── WHY US ─── */
+  .why-us {
+    padding: 100px 0;
+    background: var(--navy-deep);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .why-us::before {
+    content: '';
+    position: absolute;
+    left: -200px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,168,168,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    margin-top: 60px;
+  }
+
+  .pillar {
+    padding: 48px 36px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.25s;
+  }
+
+  .pillar:hover {
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-4px);
+  }
+
+  .pillar-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+    margin-bottom: 24px;
+    opacity: 0.7;
+  }
+
+  .pillar-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--white);
+    margin-bottom: 14px;
+    line-height: 1.2;
+  }
+
+  .pillar-desc {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* ─── BANKS / PARTNERS ─── */
+  .partners {
+    padding: 80px 0;
+    background: rgba(0,0,0,0.3);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .partners-label {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 40px;
+  }
+
+  .banks-scroll {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .banks-track {
+    display: flex;
+    gap: 0;
+    animation: ticker 30s linear infinite;
+  }
+
+  .bank-name {
+    flex-shrink: 0;
+    padding: 0 36px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.2);
+    border-right: 1px solid var(--border);
+    white-space: nowrap;
+    transition: color 0.2s;
+    letter-spacing: 0.03em;
+  }
+
+  /* ─── CONTACT / CTA ─── */
+  .contact {
+    padding: 120px 0;
+    background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-mid) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact::before {
+    content: '';
+    position: absolute;
+    right: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .contact-left .section-title { margin-bottom: 20px; }
+
+  .contact-channels {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 40px;
+  }
+
+  .contact-channel {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .contact-channel:hover {
+    background: rgba(0,168,168,0.08);
+    border-color: rgba(0,168,168,0.25);
+  }
+
+  .channel-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    background: var(--teal-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .channel-info .label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 4px;
+  }
+
+  .channel-info .value {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+  }
+
+  /* Contact form */
+  .contact-form {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 48px;
+  }
+
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  .form-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 13px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--white);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .form-input::placeholder { color: rgba(255,255,255,0.2); }
+
+  .form-input:focus {
+    border-color: rgba(0,168,168,0.5);
+    background: rgba(0,168,168,0.04);
+  }
+
+  .form-select {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 13px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--white);
+    transition: border-color 0.2s;
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+
+  .form-select option { background: var(--navy); }
+
+  .form-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 13px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--white);
+    transition: border-color 0.2s;
+    outline: none;
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .form-textarea::placeholder { color: rgba(255,255,255,0.2); }
+  .form-textarea:focus { border-color: rgba(0,168,168,0.5); }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-submit {
+    width: 100%;
+    background: var(--teal);
+    color: var(--navy-deep);
+    border: none;
+    border-radius: 4px;
+    padding: 15px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+
+  .form-submit:hover {
+    background: var(--teal-light);
+    transform: translateY(-1px);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--navy-deep);
+    border-top: 1px solid var(--border);
+    padding: 60px 0 40px;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 60px;
+  }
+
+  .footer-brand p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.35);
+    margin-top: 16px;
+    max-width: 280px;
+  }
+
+  .footer-col-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 20px;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-links a {
+    text-decoration: none;
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--white); }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-legal {
+    font-size: 12px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  .footer-compliance {
+    display: flex;
+    gap: 16px;
+  }
+
+  .compliance-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: rgba(0,168,168,0.6);
+    padding: 4px 10px;
+    border: 1px solid rgba(0,168,168,0.2);
+    border-radius: 2px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .live-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal);
+    animation: pulse 2s ease infinite;
+    margin-right: 6px;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <a href="#" class="logo">
+    <svg class="logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="18" cy="18" r="15" stroke="#00A8A8" stroke-width="1"/>
+      <ellipse cx="18" cy="18" rx="7" ry="15" stroke="#00A8A8" stroke-width="1" opacity="0.5"/>
+      <line x1="3" y1="18" x2="33" y2="18" stroke="#00A8A8" stroke-width="1" opacity="0.5"/>
+      <path d="M6 10 Q18 14 30 10" stroke="#F5A623" stroke-width="1.2" fill="none"/>
+      <path d="M4 24 Q18 20 32 24" stroke="#F5A623" stroke-width="1.2" fill="none"/>
+      <circle cx="8" cy="18" r="2" fill="#00A8A8"/>
+      <circle cx="28" cy="18" r="2" fill="#00A8A8"/>
+      <line x1="8" y1="18" x2="28" y2="18" stroke="#F5A623" stroke-width="1" stroke-dasharray="3 2" opacity="0.7"/>
+    </svg>
+    <div class="logo-text">
+      <span class="brand">Atlas Trade</span>
+      <span class="sub">Intelligence</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#mandate">Services</a></li>
+    <li><a href="#instruments">Instruments</a></li>
+    <li><a href="#commodities">Commodities</a></li>
+    <li><a href="#systems">Payment Systems</a></li>
+    <li><a href="#geography">Regions</a></li>
+    <li><a href="#contact" class="nav-cta">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-glow-gold"></div>
+    <!-- SVG trade route illustration -->
+    <svg class="trade-lines" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Globe outline -->
+      <circle cx="250" cy="200" r="160" stroke="rgba(0,168,168,0.12)" stroke-width="1"/>
+      <ellipse cx="250" cy="200" rx="80" ry="160" stroke="rgba(0,168,168,0.08)" stroke-width="1"/>
+      <line x1="90" y1="200" x2="410" y2="200" stroke="rgba(0,168,168,0.08)" stroke-width="1"/>
+      <line x1="250" y1="40" x2="250" y2="360" stroke="rgba(0,168,168,0.08)" stroke-width="1"/>
+      <!-- Latitude lines -->
+      <ellipse cx="250" cy="200" rx="155" ry="40" stroke="rgba(0,168,168,0.06)" stroke-width="0.5"/>
+      <ellipse cx="250" cy="150" rx="130" ry="32" stroke="rgba(0,168,168,0.06)" stroke-width="0.5"/>
+      <ellipse cx="250" cy="250" rx="130" ry="32" stroke="rgba(0,168,168,0.06)" stroke-width="0.5"/>
+      <!-- Trade routes -->
+      <path d="M130 160 Q200 100 310 170" stroke="#00A8A8" stroke-width="1.2" fill="none" stroke-dasharray="5 3" opacity="0.6"/>
+      <path d="M140 230 Q250 280 370 220" stroke="#F5A623" stroke-width="1.2" fill="none" stroke-dasharray="5 3" opacity="0.5"/>
+      <path d="M110 200 Q250 130 390 190" stroke="#00A8A8" stroke-width="0.8" fill="none" opacity="0.3"/>
+      <!-- City nodes -->
+      <circle cx="130" cy="160" r="4" fill="#00A8A8"/>
+      <circle cx="310" cy="170" r="4" fill="#00A8A8"/>
+      <circle cx="140" cy="230" r="3" fill="#F5A623"/>
+      <circle cx="370" cy="220" r="3" fill="#F5A623"/>
+      <circle cx="250" cy="155" r="3" fill="rgba(0,168,168,0.5)"/>
+      <!-- Moving dots on routes -->
+      <circle cx="220" cy="125" r="3" fill="#00A8A8" opacity="0.8">
+        <animateMotion dur="4s" repeatCount="indefinite">
+          <mpath href="#route1"/>
+        </animateMotion>
+      </circle>
+      <circle cx="0" cy="0" r="2.5" fill="#F5A623" opacity="0.8">
+        <animateMotion dur="5s" repeatCount="indefinite" begin="1s">
+          <mpath href="#route2"/>
+        </animateMotion>
+      </circle>
+      <defs>
+        <path id="route1" d="M130 160 Q200 100 310 170"/>
+        <path id="route2" d="M140 230 Q250 280 370 220"/>
+      </defs>
+      <!-- City labels -->
+      <text x="115" y="150" fill="rgba(255,255,255,0.3)" font-size="9" font-family="DM Mono">LON</text>
+      <text x="316" y="162" fill="rgba(255,255,255,0.3)" font-size="9" font-family="DM Mono">SGP</text>
+      <text x="125" y="246" fill="rgba(245,166,35,0.5)" font-size="9" font-family="DM Mono">NYC</text>
+      <text x="376" y="235" fill="rgba(245,166,35,0.5)" font-size="9" font-family="DM Mono">HKG</text>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="eyebrow-line"></div>
+      <span class="eyebrow-text"><span class="live-dot"></span>Global Trade Intelligence Platform</span>
+    </div>
+    <h1>
+      Unlock <em>Global Trade.</em><br>
+      Secure Your <span class="gold">Cross-Border</span><br>
+      Payments.
+    </h1>
+    <p class="hero-desc">
+      Your single platform for international product sourcing and high-value financial clearance. Connecting verified buyers, sellers, and the world's top financial institutions.
+    </p>
+    <div class="hero-actions">
+      <a href="#mandate" class="btn-primary">
+        Explore Services
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#contact" class="btn-secondary">
+        Request Consultation
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-item">
+      <div class="stat-value">100<span>+</span></div>
+      <div class="stat-label">Commodities Traded</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">Top <span>100</span></div>
+      <div class="stat-label">Global Bank Partners</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value"><span>15</span>+</div>
+      <div class="stat-label">Payment Instruments</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value"><span>3</span> Regions</div>
+      <div class="stat-label">Europe · Americas · Asia</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── TICKER ─── -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="symbol">CRUDE OIL</span> <span class="up">▲ +1.24%</span></div>
+    <div class="ticker-item"><span class="symbol">XAU/USD</span> <span class="up">▲ +0.87%</span></div>
+    <div class="ticker-item"><span class="symbol">COPPER</span> <span class="down">▼ -0.32%</span></div>
+    <div class="ticker-item"><span class="symbol">WHEAT</span> <span class="up">▲ +2.11%</span></div>
+    <div class="ticker-item"><span class="symbol">EUR/USD</span> 1.0842 <span class="down">▼ -0.14%</span></div>
+    <div class="ticker-item"><span class="symbol">NATURAL GAS</span> <span class="up">▲ +3.05%</span></div>
+    <div class="ticker-item"><span class="symbol">SOYBEANS</span> <span class="down">▼ -0.67%</span></div>
+    <div class="ticker-item"><span class="symbol">LITHIUM</span> <span class="up">▲ +1.93%</span></div>
+    <div class="ticker-item"><span class="symbol">USD/CNY</span> 7.2318 <span class="up">▲ +0.08%</span></div>
+    <div class="ticker-item"><span class="symbol">IRON ORE</span> <span class="down">▼ -1.15%</span></div>
+    <div class="ticker-item"><span class="symbol">PALM OIL</span> <span class="up">▲ +0.56%</span></div>
+    <div class="ticker-item"><span class="symbol">COBALT</span> <span class="down">▼ -0.44%</span></div>
+    <!-- duplicate for seamless loop -->
+    <div class="ticker-item"><span class="symbol">CRUDE OIL</span> <span class="up">▲ +1.24%</span></div>
+    <div class="ticker-item"><span class="symbol">XAU/USD</span> <span class="up">▲ +0.87%</span></div>
+    <div class="ticker-item"><span class="symbol">COPPER</span> <span class="down">▼ -0.32%</span></div>
+    <div class="ticker-item"><span class="symbol">WHEAT</span> <span class="up">▲ +2.11%</span></div>
+    <div class="ticker-item"><span class="symbol">EUR/USD</span> 1.0842 <span class="down">▼ -0.14%</span></div>
+    <div class="ticker-item"><span class="symbol">NATURAL GAS</span> <span class="up">▲ +3.05%</span></div>
+    <div class="ticker-item"><span class="symbol">SOYBEANS</span> <span class="down">▼ -0.67%</span></div>
+    <div class="ticker-item"><span class="symbol">LITHIUM</span> <span class="up">▲ +1.93%</span></div>
+    <div class="ticker-item"><span class="symbol">USD/CNY</span> 7.2318 <span class="up">▲ +0.08%</span></div>
+    <div class="ticker-item"><span class="symbol">IRON ORE</span> <span class="down">▼ -1.15%</span></div>
+    <div class="ticker-item"><span class="symbol">PALM OIL</span> <span class="up">▲ +0.56%</span></div>
+    <div class="ticker-item"><span class="symbol">COBALT</span> <span class="down">▼ -0.44%</span></div>
+  </div>
+</div>
+
+<!-- ─── DUAL MANDATE ─── -->
+<section class="dual-mandate" id="mandate">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-eyebrow"><div class="line"></div><span>What We Do</span></div>
+      <h2 class="section-title">A Dual-Mandate <em>Platform</em></h2>
+      <p class="section-subtitle">Two distinct capabilities — one integrated platform connecting global trade flows and institutional financial settlement.</p>
+    </div>
+
+    <div class="mandate-grid reveal">
+      <div class="mandate-card trade">
+        <div class="mandate-icon">🌐</div>
+        <div class="mandate-label">For Sellers & Manufacturers</div>
+        <h3 class="mandate-title">Global Commodity Trade Matching</h3>
+        <p class="mandate-desc">Stop leaving revenue on the table. We connect product owners with a vetted network of verified international buyers actively seeking products like yours — without the complexity of international marketing.</p>
+        <ul class="mandate-list">
+          <li>Access to verified global buyer network across 3 continents</li>
+          <li>100+ commodities: minerals, agricultural products & chemicals</li>
+          <li>Managed sourcing for import/export businesses</li>
+          <li>Incoterms guidance: CIF, FOB, EXW structuring</li>
+          <li>Documentary compliance support (Bill of Lading, COO, etc.)</li>
+        </ul>
+      </div>
+      <div class="mandate-card finance">
+        <div class="mandate-icon">🏦</div>
+        <div class="mandate-label">For Financial Institutions & Corporations</div>
+        <h3 class="mandate-title">Institutional Financial Clearance</h3>
+        <p class="mandate-desc">High-stakes precision for the world's largest capital movements. We act as Financial Transaction Consultants for the world's Top 100 Banks, facilitating seamless execution of all major bulk fund transfer types.</p>
+        <ul class="mandate-list">
+          <li>SWIFT MT103 / MT202 / MT760 institutional messaging</li>
+          <li>Bulk ACH, EFT & mass wire transfer processing</li>
+          <li>CHIPS, TARGET2, CHAPS & CIPS clearing participation</li>
+          <li>Cryptocurrency & digital asset fiat conversion</li>
+          <li>Multi-currency pool consolidation & treasury reallocation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FINANCIAL INSTRUMENTS ─── -->
+<section class="instruments" id="instruments">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-eyebrow"><div class="line"></div><span>Financial Instruments</span></div>
+      <h2 class="section-title">Every Major <em>Instrument</em><br>We Facilitate</h2>
+      <p class="section-subtitle">From Letters of Credit to blockchain settlements, our expertise spans the full spectrum of trade finance instruments.</p>
+    </div>
+
+    <div class="instruments-layout reveal">
+      <div class="instruments-sidebar">
+        <p style="font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6;">Select an instrument category to explore our capabilities in that area.</p>
+        <ul class="instruments-nav">
+          <li><button class="active" onclick="showPanel('lc', this)">Letters of Credit</button></li>
+          <li><button onclick="showPanel('bg', this)">Bank Guarantees</button></li>
+          <li><button onclick="showPanel('doc', this)">Documentary Collections</button></li>
+          <li><button onclick="showPanel('payment', this)">Payment Methods</button></li>
+          <li><button onclick="showPanel('advanced', this)">Advanced Instruments</button></li>
+          <li><button onclick="showPanel('digital', this)">Digital & Blockchain</button></li>
+        </ul>
+      </div>
+
+      <div class="instruments-content">
+        <!-- Letters of Credit -->
+        <div class="instrument-panel active" id="panel-lc">
+          <div class="instrument-grid">
+            <div class="instrument-card"><div class="instrument-card-name">Sight LC</div><div class="instrument-card-desc">Payment made immediately upon presentation of compliant documents. Ideal for one-off high-value transactions.</div><span class="instrument-tag">Immediate</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Usance LC</div><div class="instrument-card-desc">Payment after a specified period (30, 60, 90 days) from bill of lading or sight. Provides buyer with liquidity buffer.</div><span class="instrument-tag">Deferred</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Confirmed LC</div><div class="instrument-card-desc">A second bank adds its confirmation, guaranteeing payment regardless of issuing bank risk.</div><span class="instrument-tag">Guaranteed</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Standby LC (SBLC)</div><div class="instrument-card-desc">Performance guarantee drawn only if the applicant fails to fulfill an obligation. Governs ISP98.</div><span class="instrument-tag">Guarantee</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Revolving LC</div><div class="instrument-card-desc">Covers multiple shipments under a single LC, automatically replenishing after each draw.</div><span class="instrument-tag">Recurring</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Transferable LC</div><div class="instrument-card-desc">Allows the beneficiary to transfer credit to a second beneficiary. Common in commodity trading chains.</div><span class="instrument-tag">Transferable</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Back-to-Back LC</div><div class="instrument-card-desc">Two separate LCs for ultimate buyer and supplier, used when an intermediary is involved in the chain.</div><span class="instrument-tag">Intermediary</span></div>
+          </div>
+          <div style="margin-top:16px;padding:16px 20px;background:rgba(0,168,168,0.06);border:1px solid rgba(0,168,168,0.15);border-radius:6px;font-size:12px;color:rgba(255,255,255,0.45);">Governed by <strong style="color:var(--teal)">UCP 600</strong> — Uniform Customs and Practice for Documentary Credits</div>
+        </div>
+
+        <!-- Bank Guarantees -->
+        <div class="instrument-panel" id="panel-bg">
+          <div class="instrument-grid">
+            <div class="instrument-card"><div class="instrument-card-name">Performance Bond</div><div class="instrument-card-desc">Guarantees the seller's performance under the contract terms and delivery conditions.</div><span class="instrument-tag">Performance</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Advance Payment Guarantee</div><div class="instrument-card-desc">Secures any advance payment made by the buyer, ensuring return if seller defaults.</div><span class="instrument-tag">Advance</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Bid / Tender Bond</div><div class="instrument-card-desc">Ensures the bidder will honor the contract if awarded the bid. Common in large procurement.</div><span class="instrument-tag">Tender</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Payment Guarantee</div><div class="instrument-card-desc">Guarantees the buyer's payment obligation to the seller under the trade contract.</div><span class="instrument-tag">Payment</span></div>
+          </div>
+        </div>
+
+        <!-- Documentary Collections -->
+        <div class="instrument-panel" id="panel-doc">
+          <div class="instrument-grid">
+            <div class="instrument-card"><div class="instrument-card-name">Documents Against Payment (D/P)</div><div class="instrument-card-desc">Buyer pays at sight to obtain shipping documents. Lower cost than LC, moderate protection.</div><span class="instrument-tag">D/P</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Documents Against Acceptance (D/A)</div><div class="instrument-card-desc">Buyer accepts a time draft (promise to pay later) to obtain documents. URC 522 governed.</div><span class="instrument-tag">D/A</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Open Account</div><div class="instrument-card-desc">Seller ships and invoices; buyer pays at an agreed future date (Net 30/60/90). Common in established relationships.</div><span class="instrument-tag">Open</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Cash in Advance</div><div class="instrument-card-desc">Full or partial payment before shipment. Minimizes seller risk, burdens buyer with upfront capital.</div><span class="instrument-tag">Advance</span></div>
+          </div>
+          <div style="margin-top:16px;padding:16px 20px;background:rgba(0,168,168,0.06);border:1px solid rgba(0,168,168,0.15);border-radius:6px;font-size:12px;color:rgba(255,255,255,0.45);">Governed by <strong style="color:var(--teal)">URC 522</strong> — Uniform Rules for Collections</div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="instrument-panel" id="panel-payment">
+          <div class="instrument-grid">
+            <div class="instrument-card"><div class="instrument-card-name">Bills of Exchange</div><div class="instrument-card-desc">Sight drafts payable on demand; time drafts payable at a fixed future date. Used under LCs or collections.</div><span class="instrument-tag">Draft</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Promissory Notes</div><div class="instrument-card-desc">Written promise by the buyer to pay a specified amount to the seller on a certain date.</div><span class="instrument-tag">Promise</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Bankers' Acceptances</div><div class="instrument-card-desc">A time draft accepted by a bank — a negotiable instrument tradeable in the money market.</div><span class="instrument-tag">Negotiable</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">SWIFT MT103</div><div class="instrument-card-desc">Single customer credit transfer. The standard message type for cross-border international payments.</div><span class="instrument-tag">SWIFT</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">SWIFT MT202</div><div class="instrument-card-desc">Bank-to-bank cover payment. Used for interbank settlements and cover payments (MT202 COV).</div><span class="instrument-tag">SWIFT</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">SWIFT MT760</div><div class="instrument-card-desc">Issuance of Standby LCs and Bank Guarantees via the global SWIFT messaging network.</div><span class="instrument-tag">SWIFT</span></div>
+          </div>
+        </div>
+
+        <!-- Advanced -->
+        <div class="instrument-panel" id="panel-advanced">
+          <div class="instrument-grid">
+            <div class="instrument-card"><div class="instrument-card-name">Forfaiting</div><div class="instrument-card-desc">Seller sells medium-term receivables at a discount to a forfaiter on a without-recourse basis.</div><span class="instrument-tag">Without Recourse</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Factoring</div><div class="instrument-card-desc">Seller assigns accounts receivable to a factor for immediate cash, typically with recourse.</div><span class="instrument-tag">Receivables</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Trade Credit Insurance</div><div class="instrument-card-desc">Insures the seller against buyer default, enabling open account terms with protection.</div><span class="instrument-tag">Insurance</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Supply Chain Finance</div><div class="instrument-card-desc">Bank pays seller early at discount based on buyer's creditworthiness. Reverse factoring model.</div><span class="instrument-tag">SCF</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Payment Netting</div><div class="instrument-card-desc">Offsetting receivables and payables between parties. Reduces gross settlement risk and cost.</div><span class="instrument-tag">Netting</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Multi-Currency Pools</div><div class="instrument-card-desc">Consolidation and reallocation of bulk cross-border treasury funds across multiple currencies.</div><span class="instrument-tag">Treasury</span></div>
+          </div>
+        </div>
+
+        <!-- Digital -->
+        <div class="instrument-panel" id="panel-digital">
+          <div class="instrument-grid">
+            <div class="instrument-card"><div class="instrument-card-name">Digital Letters of Credit</div><div class="instrument-card-desc">Electronic LCs via platforms like Bolero, essDocs, and TradeLens on distributed ledger technology.</div><span class="instrument-tag">DLT</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Crypto & Digital Assets</div><div class="instrument-card-desc">Secure, large-volume conversion and transfer of digital assets to fiat currency for institutional settlement.</div><span class="instrument-tag">Crypto</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Tokenized Payments</div><div class="instrument-card-desc">Blockchain-based tokenized payment settlement for cross-border high-value transactions.</div><span class="instrument-tag">Tokenized</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">SWIFT GPI Tracking</div><div class="instrument-card-desc">Global Payments Innovation — enhanced tracking and transparency for all cross-border payments.</div><span class="instrument-tag">GPI</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── COMMODITIES ─── -->
+<section class="commodities" id="commodities">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-eyebrow"><div class="line"></div><span>Commodities</span></div>
+      <h2 class="section-title">100+ Commodities <em>Traded</em><br>Across Three Categories</h2>
+      <p class="section-subtitle">From crude oil to rare earth elements, from wheat to specialty chemicals — we facilitate global movement of all major commodity classes.</p>
+    </div>
+
+    <div class="commodities-tabs reveal">
+      <button class="tab-btn active" onclick="showTab('minerals', this)">⛏ Mineral Commodities</button>
+      <button class="tab-btn" onclick="showTab('agri', this)">🌾 Agricultural Products</button>
+      <button class="tab-btn" onclick="showTab('chem', this)">⚗️ Chemical Products</button>
+    </div>
+
+    <div class="commodities-panel active" id="tab-minerals">
+      <div class="commodities-grid">
+        <div class="commodity-item"><span class="commodity-num">01</span>Crude Oil</div>
+        <div class="commodity-item"><span class="commodity-num">02</span>Natural Gas</div>
+        <div class="commodity-item"><span class="commodity-num">03</span>Coal</div>
+        <div class="commodity-item"><span class="commodity-num">04</span>Iron Ore</div>
+        <div class="commodity-item"><span class="commodity-num">05</span>Copper</div>
+        <div class="commodity-item"><span class="commodity-num">06</span>Gold</div>
+        <div class="commodity-item"><span class="commodity-num">07</span>Silver</div>
+        <div class="commodity-item"><span class="commodity-num">08</span>Aluminum</div>
+        <div class="commodity-item"><span class="commodity-num">09</span>Zinc</div>
+        <div class="commodity-item"><span class="commodity-num">10</span>Lead</div>
+        <div class="commodity-item"><span class="commodity-num">11</span>Nickel</div>
+        <div class="commodity-item"><span class="commodity-num">12</span>Tin</div>
+        <div class="commodity-item"><span class="commodity-num">13</span>Platinum</div>
+        <div class="commodity-item"><span class="commodity-num">14</span>Palladium</div>
+        <div class="commodity-item"><span class="commodity-num">15</span>Uranium</div>
+        <div class="commodity-item"><span class="commodity-num">16</span>Lithium</div>
+        <div class="commodity-item"><span class="commodity-num">17</span>Cobalt</div>
+        <div class="commodity-item"><span class="commodity-num">18</span>Rare Earth Elements</div>
+        <div class="commodity-item"><span class="commodity-num">19</span>Diamonds</div>
+        <div class="commodity-item"><span class="commodity-num">20</span>Phosphate Rock</div>
+        <div class="commodity-item"><span class="commodity-num">21</span>Potash</div>
+        <div class="commodity-item"><span class="commodity-num">22</span>Salt</div>
+        <div class="commodity-item"><span class="commodity-num">23</span>Gypsum</div>
+        <div class="commodity-item"><span class="commodity-num">24</span>Limestone</div>
+        <div class="commodity-item"><span class="commodity-num">25</span>Bauxite</div>
+        <div class="commodity-item"><span class="commodity-num">26</span>Manganese</div>
+        <div class="commodity-item"><span class="commodity-num">27</span>Chromium</div>
+        <div class="commodity-item"><span class="commodity-num">28</span>Molybdenum</div>
+        <div class="commodity-item"><span class="commodity-num">29</span>Titanium</div>
+        <div class="commodity-item"><span class="commodity-num">30</span>Tungsten</div>
+      </div>
+    </div>
+
+    <div class="commodities-panel" id="tab-agri">
+      <div class="commodities-grid">
+        <div class="commodity-item"><span class="commodity-num">01</span>Wheat</div>
+        <div class="commodity-item"><span class="commodity-num">02</span>Corn (Maize)</div>
+        <div class="commodity-item"><span class="commodity-num">03</span>Rice</div>
+        <div class="commodity-item"><span class="commodity-num">04</span>Soybeans</div>
+        <div class="commodity-item"><span class="commodity-num">05</span>Barley</div>
+        <div class="commodity-item"><span class="commodity-num">06</span>Oats</div>
+        <div class="commodity-item"><span class="commodity-num">07</span>Rye</div>
+        <div class="commodity-item"><span class="commodity-num">08</span>Sorghum</div>
+        <div class="commodity-item"><span class="commodity-num">09</span>Cotton</div>
+        <div class="commodity-item"><span class="commodity-num">10</span>Sugar</div>
+        <div class="commodity-item"><span class="commodity-num">11</span>Coffee</div>
+        <div class="commodity-item"><span class="commodity-num">12</span>Cocoa</div>
+        <div class="commodity-item"><span class="commodity-num">13</span>Tea</div>
+        <div class="commodity-item"><span class="commodity-num">14</span>Tobacco</div>
+        <div class="commodity-item"><span class="commodity-num">15</span>Palm Oil</div>
+        <div class="commodity-item"><span class="commodity-num">16</span>Sunflower Oil</div>
+        <div class="commodity-item"><span class="commodity-num">17</span>Canola / Rapeseed</div>
+        <div class="commodity-item"><span class="commodity-num">18</span>Peanuts</div>
+        <div class="commodity-item"><span class="commodity-num">19</span>Live Cattle</div>
+        <div class="commodity-item"><span class="commodity-num">20</span>Lean Hogs</div>
+        <div class="commodity-item"><span class="commodity-num">21</span>Poultry</div>
+        <div class="commodity-item"><span class="commodity-num">22</span>Milk</div>
+        <div class="commodity-item"><span class="commodity-num">23</span>Butter</div>
+        <div class="commodity-item"><span class="commodity-num">24</span>Cheese</div>
+        <div class="commodity-item"><span class="commodity-num">25</span>Eggs</div>
+        <div class="commodity-item"><span class="commodity-num">26</span>Oranges</div>
+        <div class="commodity-item"><span class="commodity-num">27</span>Apples</div>
+        <div class="commodity-item"><span class="commodity-num">28</span>Bananas</div>
+        <div class="commodity-item"><span class="commodity-num">29</span>Potatoes</div>
+        <div class="commodity-item"><span class="commodity-num">30</span>Tomatoes</div>
+        <div class="commodity-item"><span class="commodity-num">31</span>Onions</div>
+        <div class="commodity-item"><span class="commodity-num">32</span>Grapes</div>
+        <div class="commodity-item"><span class="commodity-num">33</span>Rubber</div>
+        <div class="commodity-item"><span class="commodity-num">34</span>Timber</div>
+        <div class="commodity-item"><span class="commodity-num">35</span>Fish / Aquaculture</div>
+      </div>
+    </div>
+
+    <div class="commodities-panel" id="tab-chem">
+      <div class="commodities-grid">
+        <div class="commodity-item"><span class="commodity-num">01</span>Ethylene</div>
+        <div class="commodity-item"><span class="commodity-num">02</span>Propylene</div>
+        <div class="commodity-item"><span class="commodity-num">03</span>Butadiene</div>
+        <div class="commodity-item"><span class="commodity-num">04</span>Benzene</div>
+        <div class="commodity-item"><span class="commodity-num">05</span>Toluene</div>
+        <div class="commodity-item"><span class="commodity-num">06</span>Xylene</div>
+        <div class="commodity-item"><span class="commodity-num">07</span>Methanol</div>
+        <div class="commodity-item"><span class="commodity-num">08</span>Ammonia</div>
+        <div class="commodity-item"><span class="commodity-num">09</span>Urea</div>
+        <div class="commodity-item"><span class="commodity-num">10</span>Nitric Acid</div>
+        <div class="commodity-item"><span class="commodity-num">11</span>Sulfuric Acid</div>
+        <div class="commodity-item"><span class="commodity-num">12</span>Phosphoric Acid</div>
+        <div class="commodity-item"><span class="commodity-num">13</span>Chlorine</div>
+        <div class="commodity-item"><span class="commodity-num">14</span>Sodium Hydroxide</div>
+        <div class="commodity-item"><span class="commodity-num">15</span>Sodium Carbonate</div>
+        <div class="commodity-item"><span class="commodity-num">16</span>Polyethylene</div>
+        <div class="commodity-item"><span class="commodity-num">17</span>Polypropylene</div>
+        <div class="commodity-item"><span class="commodity-num">18</span>PVC</div>
+        <div class="commodity-item"><span class="commodity-num">19</span>Polystyrene</div>
+        <div class="commodity-item"><span class="commodity-num">20</span>PET</div>
+        <div class="commodity-item"><span class="commodity-num">21</span>Ethylene Glycol</div>
+        <div class="commodity-item"><span class="commodity-num">22</span>Propylene Glycol</div>
+        <div class="commodity-item"><span class="commodity-num">23</span>Acetone</div>
+        <div class="commodity-item"><span class="commodity-num">24</span>Phenol</div>
+        <div class="commodity-item"><span class="commodity-num">25</span>Formaldehyde</div>
+        <div class="commodity-item"><span class="commodity-num">26</span>Acetic Acid</div>
+        <div class="commodity-item"><span class="commodity-num">27</span>Adipic Acid</div>
+        <div class="commodity-item"><span class="commodity-num">28</span>Caprolactam</div>
+        <div class="commodity-item"><span class="commodity-num">29</span>Methyl Methacrylate</div>
+        <div class="commodity-item"><span class="commodity-num">30</span>Titanium Dioxide</div>
+        <div class="commodity-item"><span class="commodity-num">31</span>Sulfur</div>
+        <div class="commodity-item"><span class="commodity-num">32</span>Phosphorus</div>
+        <div class="commodity-item"><span class="commodity-num">33</span>Hydrochloric Acid</div>
+        <div class="commodity-item"><span class="commodity-num">34</span>Hydrogen Peroxide</div>
+        <div class="commodity-item"><span class="commodity-num">35</span>Sodium Bicarbonate</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PAYMENT SYSTEMS ─── -->
+<section class="payment-systems" id="systems">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-eyebrow"><div class="line"></div><span>Clearing & Settlement</span></div>
+      <h2 class="section-title">Global Payment <em>Infrastructure</em><br>We Operate Within</h2>
+      <p class="section-subtitle">Direct participation and advisory across every major institutional clearing system on earth.</p>
+    </div>
+
+    <div class="systems-grid reveal">
+      <div class="system-card">
+        <div class="system-code">SWIFT · GPI</div>
+        <div class="system-name">SWIFT Network</div>
+        <div class="system-desc">Global interbank messaging for MT103, MT202, MT760 transfers. Enhanced with GPI for real-time tracking and Unique Transaction Reference reconciliation.</div>
+        <div class="system-region"><span class="region-tag">Global</span><span class="region-tag">All Currencies</span></div>
+      </div>
+      <div class="system-card">
+        <div class="system-code">CHIPS</div>
+        <div class="system-name">Clearing House Interbank</div>
+        <div class="system-desc">Primary USD clearing system for large-value payments. Direct participation for institutional USD bulk settlement across the US financial system.</div>
+        <div class="system-region"><span class="region-tag">USA</span><span class="region-tag">USD</span></div>
+      </div>
+      <div class="system-card">
+        <div class="system-code">TARGET2</div>
+        <div class="system-name">Eurozone RTGS</div>
+        <div class="system-desc">Eurozone's real-time gross settlement system. Seamless EUR institutional settlement across all European Central Bank member states.</div>
+        <div class="system-region"><span class="region-tag">Europe</span><span class="region-tag">EUR</span></div>
+      </div>
+      <div class="system-card">
+        <div class="system-code">CHAPS</div>
+        <div class="system-name">UK High-Value Payments</div>
+        <div class="system-desc">UK's same-day high-value payment system for sterling settlements. Critical for London-based commodity trade finance hubs.</div>
+        <div class="system-region"><span class="region-tag">UK</span><span class="region-tag">GBP</span></div>
+      </div>
+      <div class="system-card">
+        <div class="system-code">CIPS</div>
+        <div class="system-name">Cross-Border RMB System</div>
+        <div class="system-desc">China's Cross-Border Interbank Payment System for RMB settlements. Essential for Asia-Pacific commodity trade with Chinese counterparties.</div>
+        <div class="system-region"><span class="region-tag">China</span><span class="region-tag">RMB</span></div>
+      </div>
+      <div class="system-card">
+        <div class="system-code">FEDWIRE · ACH · EFT</div>
+        <div class="system-name">US Federal Reserve</div>
+        <div class="system-desc">Fedwire for real-time gross settlement; Bulk ACH for mass payroll and vendor payables; EFT processing for recurring high-volume settlements.</div>
+        <div class="system-region"><span class="region-tag">USA</span><span class="region-tag">USD</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px; padding: 28px 32px; background: rgba(245,166,35,0.05); border: 1px solid rgba(245,166,35,0.15); border-radius: 6px;" class="reveal">
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:0.1em;">LEGAL FRAMEWORKS</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">UCP 600</span>
+          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">URC 522</span>
+          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">ISP98</span>
+          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">UNCITRAL</span>
+          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">KYC / AML</span>
+          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">Sanctions Screening</span>
+          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">TBML Monitoring</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── GEOGRAPHY ─── -->
+<section class="geography" id="geography">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-eyebrow"><div class="line"></div><span>Geographic Focus</span></div>
+      <h2 class="section-title">Active Across <em>Three</em><br>Continents</h2>
+      <p class="section-subtitle">Primary trade relationships spanning Europe, the Americas, and Asia — covering the world's most active commodity and financial corridors.</p>
+    </div>
+
+    <div class="geo-layout reveal">
+      <div class="geo-region">
+        <div class="geo-region-header">
+          <span class="geo-flag">🌍</span>
+          <div class="geo-region-name">Europe</div>
+        </div>
+        <ul class="geo-countries">
+          <li class="geo-country"><span class="geo-country-flag">🇩🇪</span>Germany</li>
+          <li class="geo-country"><span class="geo-country-flag">🇳🇱</span>Netherlands</li>
+          <li class="geo-country"><span class="geo-country-flag">🇵🇱</span>Poland</li>
+          <li class="geo-country"><span class="geo-country-flag">🇬🇧</span>United Kingdom</li>
+        </ul>
+      </div>
+      <div class="geo-region">
+        <div class="geo-region-header">
+          <span class="geo-flag">🌎</span>
+          <div class="geo-region-name">Americas</div>
+        </div>
+        <ul class="geo-countries">
+          <li class="geo-country"><span class="geo-country-flag">🇺🇸</span>United States</li>
+          <li class="geo-country"><span class="geo-country-flag">🇲🇽</span>Mexico</li>
+          <li class="geo-country"><span class="geo-country-flag">🇧🇷</span>Brazil</li>
+          <li class="geo-country"><span class="geo-country-flag">🇨🇱</span>Chile</li>
+        </ul>
+      </div>
+      <div class="geo-region">
+        <div class="geo-region-header">
+          <span class="geo-flag">🌏</span>
+          <div class="geo-region-name">Asia</div>
+        </div>
+        <ul class="geo-countries">
+          <li class="geo-country"><span class="geo-country-flag">🇨🇳</span>China</li>
+          <li class="geo-country"><span class="geo-country-flag">🇻🇳</span>Vietnam</li>
+          <li class="geo-country"><span class="geo-country-flag">🇮🇳</span>India</li>
+          <li class="geo-country"><span class="geo-country-flag">🇯🇵</span>Japan</li>
+          <li class="geo-country"><span class="geo-country-flag">🇰🇷</span>South Korea</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Trade hubs -->
+    <div style="margin-top:40px;display:flex;gap:3px;flex-wrap:wrap;" class="reveal">
+      <div style="flex:1;min-width:200px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:24px 28px;">
+        <div style="font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;">Trade Finance Hubs</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.6);line-height:2;">Singapore · London · New York · Hong Kong</div>
+      </div>
+      <div style="flex:1;min-width:200px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:24px 28px;">
+        <div style="font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;">Institutions Referenced</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.6);line-height:2;">WTO · World Bank · IMF</div>
+      </div>
+      <div style="flex:1;min-width:200px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:24px 28px;">
+        <div style="font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;">Trade Agreements</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.6);line-height:2;">USMCA · RCEP · EU Single Market</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WHY US ─── -->
+<section class="why-us">
+  <div class="section-inner">
+    <div class="section-header reveal">
+      <div class="section-eyebrow"><div class="line"></div><span>Why Partner With Us</span></div>
+      <h2 class="section-title">Institutional-Grade<br><em>Trust & Expertise</em></h2>
+    </div>
+    <div class="pillars-grid reveal">
+      <div class="pillar">
+        <div class="pillar-number">01 / 03</div>
+        <h3 class="pillar-title">Global Network Access</h3>
+        <p class="pillar-desc">Direct access to verified international buyers, G-SIBs including JPMorgan, Citi, HSBC, BNP Paribas, Deutsche Bank, and correspondent banking networks across all major trading centers.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-number">02 / 03</div>
+        <h3 class="pillar-title">Dual Expertise</h3>
+        <p class="pillar-desc">We understand both the product lifecycle and the complex banking infrastructure behind the payments. A rare combination that lets us serve manufacturers and financial institutions with equal precision.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-number">03 / 03</div>
+        <h3 class="pillar-title">Trust & Security</h3>
+        <p class="pillar-desc">Institutional-grade financial handling. Full KYC/AML compliance, OFAC and global sanctions screening, TBML monitoring, and strict adherence to UCP 600, URC 522, and UNCITRAL frameworks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── PARTNER BANKS ─── -->
+<div class="partners">
+  <div class="partners-label">Consulting for the World's Top 100 Banks — including</div>
+  <div class="banks-scroll">
+    <div class="banks-track">
+      <span class="bank-name">JPMorgan Chase</span>
+      <span class="bank-name">Citigroup</span>
+      <span class="bank-name">HSBC</span>
+      <span class="bank-name">BNP Paribas</span>
+      <span class="bank-name">Deutsche Bank</span>
+      <span class="bank-name">Standard Chartered</span>
+      <span class="bank-name">Barclays</span>
+      <span class="bank-name">Goldman Sachs</span>
+      <span class="bank-name">Bank of America</span>
+      <span class="bank-name">Société Générale</span>
+      <span class="bank-name">UBS</span>
+      <span class="bank-name">Credit Agricole</span>
+      <span class="bank-name">ING Group</span>
+      <span class="bank-name">Rabobank</span>
+      <span class="bank-name">DBS Bank</span>
+      <!-- duplicate -->
+      <span class="bank-name">JPMorgan Chase</span>
+      <span class="bank-name">Citigroup</span>
+      <span class="bank-name">HSBC</span>
+      <span class="bank-name">BNP Paribas</span>
+      <span class="bank-name">Deutsche Bank</span>
+      <span class="bank-name">Standard Chartered</span>
+      <span class="bank-name">Barclays</span>
+      <span class="bank-name">Goldman Sachs</span>
+      <span class="bank-name">Bank of America</span>
+      <span class="bank-name">Société Générale</span>
+      <span class="bank-name">UBS</span>
+      <span class="bank-name">Credit Agricole</span>
+      <span class="bank-name">ING Group</span>
+      <span class="bank-name">Rabobank</span>
+      <span class="bank-name">DBS Bank</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── CONTACT ─── -->
+<section class="contact" id="contact">
+  <div class="section-inner">
+    <div class="contact-layout">
+      <div class="contact-left reveal">
+        <div class="section-eyebrow"><div class="line"></div><span>Get In Touch</span></div>
+        <h2 class="section-title">Take Your Products —<br>and Payments — <em>Global.</em></h2>
+        <p class="section-subtitle" style="margin-top:20px;">Whether you're a commodity seller seeking international buyers, or a financial institution requiring high-stakes clearance consulting — we're ready to engage.</p>
+        <div class="contact-channels">
+          <a href="mailto:contact@atlastrade.io" class="contact-channel">
+            <div class="channel-icon">✉</div>
+            <div class="channel-info">
+              <div class="label">Email</div>
+              <div class="value">contact@atlastrade.io</div>
+            </div>
+          </a>
+          <a href="#" class="contact-channel">
+            <div class="channel-icon">🌐</div>
+            <div class="channel-info">
+              <div class="label">Trade Portal</div>
+              <div class="value">Trader Portal Login →</div>
+            </div>
+          </a>
+          <a href="#" class="contact-channel">
+            <div class="channel-icon">📞</div>
+            <div class="channel-info">
+              <div class="label">Institutional Desk</div>
+              <div class="value">Available to verified partners</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-form reveal">
+        <div class="form-title">Request a Consultation</div>
+        <p class="form-subtitle">For commodity sourcing, buyer matching, or institutional payment consulting. All submissions are reviewed by our team within 48 hours.</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input class="form-input" type="text" placeholder="John">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input class="form-input" type="text" placeholder="Smith">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Organization</label>
+          <input class="form-input" type="text" placeholder="Company or Institution">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input class="form-input" type="email" placeholder="john@company.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">I Am A</label>
+          <select class="form-select">
+            <option value="">Select your profile...</option>
+            <option>Commodity Seller / Manufacturer</option>
+            <option>International Buyer / Importer</option>
+            <option>Financial Institution / Bank</option>
+            <option>Corporate Treasury</option>
+            <option>Investor / Fund</option>
+            <option>Logistics / Supply Chain</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Inquiry Details</label>
+          <textarea class="form-textarea" placeholder="Describe your requirements — commodity type, volume, payment instrument needed, or consulting scope..."></textarea>
+        </div>
+        <button class="form-submit" onclick="handleSubmit(this)">Submit Inquiry →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo" style="text-decoration:none;">
+          <svg width="28" height="28" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="15" stroke="#00A8A8" stroke-width="1"/><ellipse cx="18" cy="18" rx="7" ry="15" stroke="#00A8A8" stroke-width="1" opacity="0.5"/><line x1="3" y1="18" x2="33" y2="18" stroke="#00A8A8" stroke-width="1" opacity="0.5"/><path d="M6 10 Q18 14 30 10" stroke="#F5A623" stroke-width="1.2" fill="none"/></svg>
+          <div class="logo-text"><span class="brand">Atlas Trade</span><span class="sub">Intelligence</span></div>
+        </a>
+        <p>Global trade matching and institutional financial clearance. Connecting buyers, sellers, and top-tier banks across three continents.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-links">
+          <li><a href="#mandate">Commodity Trade Matching</a></li>
+          <li><a href="#mandate">Financial Clearance</a></li>
+          <li><a href="#instruments">Letters of Credit</a></li>
+          <li><a href="#instruments">Bank Guarantees</a></li>
+          <li><a href="#systems">Payment Consulting</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Commodities</div>
+        <ul class="footer-links">
+          <li><a href="#commodities">Mineral Commodities</a></li>
+          <li><a href="#commodities">Agricultural Products</a></li>
+          <li><a href="#commodities">Chemical Products</a></li>
+          <li><a href="#geography">Regional Markets</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">Mission & Values</a></li>
+          <li><a href="#">Trade Intelligence</a></li>
+          <li><a href="#">Trader Portal</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-legal">© 2025 Atlas Trade Intelligence. All rights reserved. This platform is for informational and institutional communication purposes only.</div>
+      <div class="footer-compliance">
+        <span class="compliance-badge">UCP 600</span>
+        <span class="compliance-badge">AML Compliant</span>
+        <span class="compliance-badge">SWIFT GPI</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Instrument panel switcher
+function showPanel(id, btn) {
+  document.querySelectorAll('.instrument-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.instruments-nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Commodities tab switcher
+function showTab(id, btn) {
+  document.querySelectorAll('.commodities-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// Form submit feedback
+function handleSubmit(btn) {
+  btn.textContent = 'Sending...';
+  btn.style.opacity = '0.7';
+  setTimeout(() => {
+    btn.textContent = '✓ Inquiry Submitted';
+    btn.style.background = '#22c55e';
+    btn.style.opacity = '1';
+  }, 1200);
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Animated number count-up on hero stats
+const statValues = document.querySelectorAll('.stat-value');
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '0';
+      setTimeout(() => {
+        entry.target.style.transition = 'opacity 0.5s';
+        entry.target.style.opacity = '1';
+      }, 100);
+    }
+  });
+}, { threshold: 0.5 });
+statValues.forEach(el => statObserver.observe(el));
+</script>
+</body>
+</html>
