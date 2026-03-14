@@ -8,1452 +8,1019 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy: #0A2540;
-    --navy-deep: #061828;
-    --navy-mid: #0d3259;
-    --teal: #00A8A8;
-    --teal-light: #00c8c8;
-    --teal-dim: rgba(0,168,168,0.15);
-    --gold: #F5A623;
-    --gold-dim: rgba(245,166,35,0.12);
-    --white: #FFFFFF;
-    --gray-bg: #F4F6F8;
-    --gray-light: #E8ECF0;
-    --gray-mid: #8A9BB0;
-    --gray-text: #4A5B6E;
-    --border: rgba(255,255,255,0.08);
-    --border-light: rgba(10,37,64,0.1);
-  }
+/* ─── RESET & VARIABLES ─── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0A2540;
+  --navy-deep: #061828;
+  --navy-mid: #0d3259;
+  --teal: #00A8A8;
+  --teal-light: #00c8c8;
+  --teal-dim: rgba(0,168,168,0.12);
+  --gold: #F5A623;
+  --gold-dim: rgba(245,166,35,0.1);
+  --white: #FFFFFF;
+  --gray-mid: #8A9BB0;
+  --border: rgba(255,255,255,0.08);
+}
 
-  html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy-deep);
+  color: var(--white);
+  overflow-x: hidden;
+}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--navy-deep);
-    color: var(--white);
-    overflow-x: hidden;
-  }
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 60px;
+  height: 72px;
+  background: rgba(6,24,40,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
 
-  /* ─── NOISE TEXTURE OVERLAY ─── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.4;
-  }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
 
-  /* ─── NAV ─── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 60px;
-    height: 72px;
-    background: rgba(6,24,40,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-  }
+.logo-text { display: flex; flex-direction: column; line-height: 1; }
+.logo-text .brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.02em;
+}
+.logo-text .sub {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--teal);
+  text-transform: uppercase;
+  margin-top: 2px;
+}
 
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-  }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: var(--gray-mid);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  background: var(--teal) !important;
+  color: var(--navy-deep) !important;
+  padding: 9px 20px !important;
+  border-radius: 4px;
+  font-weight: 500 !important;
+}
+.nav-cta:hover { background: var(--teal-light) !important; }
 
-  .logo-mark {
-    width: 36px;
-    height: 36px;
-    position: relative;
-  }
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 8px;
+  flex-shrink: 0;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--white);
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-  .logo-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-  }
+/* Mobile menu */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 72px; left: 0; right: 0;
+  background: rgba(6,24,40,0.98);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  z-index: 999;
+  padding: 16px;
+  flex-direction: column;
+  gap: 4px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  display: block;
+  padding: 14px 16px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.mobile-menu a:hover { background: rgba(255,255,255,0.06); color: var(--white); }
+.mobile-menu .m-cta {
+  margin-top: 8px;
+  background: var(--teal);
+  color: var(--navy-deep) !important;
+  text-align: center;
+  font-weight: 500;
+}
 
-  .logo-text .brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--white);
-    letter-spacing: 0.02em;
-  }
+/* ─── HERO ─── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 140px 60px 160px;
+  overflow: hidden;
+}
 
-  .logo-text .sub {
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    color: var(--teal);
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,168,168,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,168,168,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 70% 50%, black 20%, transparent 80%);
+  pointer-events: none;
+}
 
-  .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 36px;
-    list-style: none;
-  }
+.hero-glow {
+  position: absolute;
+  right: -100px; top: 50%;
+  transform: translateY(-50%);
+  width: 700px; height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,168,168,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
 
-  .nav-links a {
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    color: var(--gray-mid);
-    text-decoration: none;
-    transition: color 0.2s;
-    text-transform: uppercase;
-  }
+.trade-lines {
+  position: absolute;
+  right: 60px; top: 50%;
+  transform: translateY(-50%);
+  width: 480px; height: 380px;
+  opacity: 0.6;
+  pointer-events: none;
+}
 
-  .nav-links a:hover { color: var(--white); }
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+}
 
-  .nav-cta {
-    background: var(--teal) !important;
-    color: var(--navy-deep) !important;
-    padding: 9px 22px !important;
-    border-radius: 4px;
-    font-weight: 500 !important;
-    transition: background 0.2s !important;
-  }
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.eyebrow-line { width: 32px; height: 1px; background: var(--teal); }
+.eyebrow-text {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
 
-  .nav-cta:hover { background: var(--teal-light) !important; }
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(44px, 6vw, 80px);
+  font-weight: 300;
+  line-height: 1.08;
+  margin-bottom: 24px;
+}
+.hero h1 em { font-style: italic; color: var(--teal); }
+.hero h1 .gold { color: var(--gold); font-style: normal; }
 
-  /* ─── HERO ─── */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 120px 60px 80px;
-    overflow: hidden;
-  }
+.hero-desc {
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.6);
+  max-width: 500px;
+  margin-bottom: 44px;
+}
 
-  /* Animated globe/grid background */
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-  }
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
 
-  .hero-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,168,168,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,168,168,0.04) 1px, transparent 1px);
-    background-size: 60px 60px;
-    mask-image: radial-gradient(ellipse 80% 80% at 70% 50%, black 20%, transparent 80%);
-  }
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--teal);
+  color: var(--navy-deep);
+  padding: 14px 28px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-primary:hover { background: var(--teal-light); transform: translateY(-1px); }
 
-  .hero-glow {
-    position: absolute;
-    right: -100px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 700px;
-    height: 700px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,168,168,0.12) 0%, rgba(0,168,168,0.04) 40%, transparent 70%);
-  }
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  color: var(--white);
+  padding: 14px 28px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.btn-secondary:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
 
-  .hero-glow-gold {
-    position: absolute;
-    right: 200px;
-    top: 30%;
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(245,166,35,0.07) 0%, transparent 70%);
-  }
+/* Hero stats */
+.hero-stats {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--border);
+  background: rgba(6,24,40,0.6);
+  backdrop-filter: blur(10px);
+}
+.stat-item {
+  padding: 24px 36px;
+  border-right: 1px solid var(--border);
+}
+.stat-item:last-child { border-right: none; }
+.stat-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--white);
+}
+.stat-value span { color: var(--teal); }
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-mid);
+  margin-top: 4px;
+}
 
-  /* Animated trade route lines */
-  .trade-lines {
-    position: absolute;
-    right: 60px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 500px;
-    height: 400px;
-    opacity: 0.6;
-  }
+/* Live dot */
+.live-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--teal);
+  margin-right: 6px;
+  animation: pulse 2s ease infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-  .hero-content {
-    position: relative;
-    z-index: 1;
-    max-width: 680px;
-  }
+/* ─── TICKER ─── */
+.ticker-wrap {
+  background: var(--teal-dim);
+  border-top: 1px solid rgba(0,168,168,0.15);
+  border-bottom: 1px solid rgba(0,168,168,0.15);
+  padding: 10px 0;
+  overflow: hidden;
+}
+.ticker-track {
+  display: flex;
+  animation: ticker 40s linear infinite;
+  white-space: nowrap;
+}
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 28px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--gray-mid);
+  border-right: 1px solid rgba(0,168,168,0.15);
+  flex-shrink: 0;
+}
+.ticker-item .symbol { color: var(--white); font-weight: 500; }
+.ticker-item .up { color: #22c55e; }
+.ticker-item .down { color: #ef4444; }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-  .hero-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 28px;
-    animation: fadeUp 0.8s ease both;
-  }
+/* ─── SECTION BASE ─── */
+section { position: relative; z-index: 1; }
 
-  .eyebrow-line {
-    width: 32px;
-    height: 1px;
-    background: var(--teal);
-  }
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
 
-  .eyebrow-text {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--teal);
-  }
+.section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.section-eyebrow .line { width: 24px; height: 1px; background: var(--teal); }
+.section-eyebrow span {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
 
-  .hero h1 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(48px, 6vw, 80px);
-    font-weight: 300;
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-    margin-bottom: 28px;
-    animation: fadeUp 0.8s 0.1s ease both;
-  }
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 4vw, 54px);
+  font-weight: 300;
+  line-height: 1.1;
+  color: var(--white);
+}
+.section-title em { font-style: italic; color: var(--teal); }
 
-  .hero h1 em {
-    font-style: italic;
-    color: var(--teal);
-  }
+.section-subtitle {
+  margin-top: 16px;
+  font-size: 16px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  max-width: 560px;
+  line-height: 1.7;
+}
 
-  .hero h1 .gold { color: var(--gold); font-style: normal; }
+.section-header { margin-bottom: 56px; }
 
-  .hero-desc {
-    font-size: 17px;
-    font-weight: 300;
-    line-height: 1.7;
-    color: rgba(255,255,255,0.65);
-    max-width: 520px;
-    margin-bottom: 48px;
-    animation: fadeUp 0.8s 0.2s ease both;
-  }
+/* ─── DUAL MANDATE ─── */
+.dual-mandate {
+  padding: 100px 0;
+  background: linear-gradient(180deg, var(--navy-deep) 0%, #081e34 100%);
+}
+.mandate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.mandate-card {
+  background: rgba(255,255,255,0.02);
+  padding: 52px 44px;
+  position: relative;
+  transition: background 0.3s;
+}
+.mandate-card:hover { background: rgba(255,255,255,0.04); }
+.mandate-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+}
+.mandate-card.trade::before { background: var(--teal); }
+.mandate-card.finance::before { background: var(--gold); }
 
-  .hero-actions {
-    display: flex;
-    gap: 16px;
-    animation: fadeUp 0.8s 0.3s ease both;
-  }
+.mandate-icon {
+  width: 48px; height: 48px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  margin-bottom: 24px;
+}
+.mandate-card.trade .mandate-icon { background: var(--teal-dim); }
+.mandate-card.finance .mandate-icon { background: var(--gold-dim); }
 
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--teal);
-    color: var(--navy-deep);
-    padding: 14px 30px;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    letter-spacing: 0.03em;
-    transition: all 0.2s;
-  }
+.mandate-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.mandate-card.trade .mandate-label { color: var(--teal); }
+.mandate-card.finance .mandate-label { color: var(--gold); }
 
-  .btn-primary:hover {
-    background: var(--teal-light);
-    transform: translateY(-1px);
-  }
+.mandate-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 18px;
+}
+.mandate-desc {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 28px;
+}
+.mandate-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.mandate-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.5;
+}
+.mandate-list li::before { content: '—'; flex-shrink: 0; }
+.mandate-card.trade .mandate-list li::before { color: var(--teal); }
+.mandate-card.finance .mandate-list li::before { color: var(--gold); }
 
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: transparent;
-    color: var(--white);
-    padding: 14px 30px;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 400;
-    text-decoration: none;
-    letter-spacing: 0.03em;
-    border: 1px solid rgba(255,255,255,0.2);
-    transition: all 0.2s;
-  }
+/* ─── INSTRUMENTS ─── */
+.instruments {
+  padding: 100px 0;
+  background: var(--navy-deep);
+}
+.instruments-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 72px;
+  align-items: start;
+}
+.instruments-sidebar { position: sticky; top: 96px; }
+.instruments-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; }
 
-  .btn-secondary:hover {
-    border-color: rgba(255,255,255,0.5);
-    background: rgba(255,255,255,0.05);
-  }
+.instruments-nav {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 28px;
+}
+.instruments-nav li button {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  padding: 12px 18px;
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  transition: all 0.2s;
+}
+.instruments-nav li button:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+.instruments-nav li button.active {
+  color: var(--teal);
+  background: var(--teal-dim);
+  border-left-color: var(--teal);
+}
 
-  /* Hero stats ticker */
+.instrument-panel { display: none; }
+.instrument-panel.active { display: block; }
+
+.instrument-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 3px;
+}
+.instrument-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px;
+  transition: all 0.2s;
+}
+.instrument-card:hover {
+  background: rgba(0,168,168,0.06);
+  border-color: rgba(0,168,168,0.2);
+  transform: translateY(-2px);
+}
+.instrument-card-name { font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+.instrument-card-desc { font-size: 12px; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,0.4); }
+.instrument-tag {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: var(--teal-dim);
+  color: var(--teal);
+}
+.ucp-note {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: rgba(0,168,168,0.06);
+  border: 1px solid rgba(0,168,168,0.15);
+  border-radius: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+}
+.ucp-note strong { color: var(--teal); }
+
+/* ─── COMMODITIES ─── */
+.commodities {
+  padding: 100px 0;
+  background: linear-gradient(180deg, #081e34 0%, var(--navy-deep) 100%);
+}
+.commodities-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 36px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px;
+  width: fit-content;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px 22px;
+  border-radius: 4px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn.active { background: var(--teal); color: var(--navy-deep); font-weight: 500; }
+
+.commodities-panel { display: none; }
+.commodities-panel.active { display: block; }
+
+.commodities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 2px;
+}
+.commodity-item {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid var(--border);
+  padding: 14px 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  transition: all 0.15s;
+}
+.commodity-item:hover { background: rgba(0,168,168,0.08); border-color: rgba(0,168,168,0.25); color: var(--white); }
+.commodity-num { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.2); flex-shrink: 0; width: 20px; }
+
+/* ─── PAYMENT SYSTEMS ─── */
+.payment-systems {
+  padding: 100px 0;
+  background: var(--navy-deep);
+}
+.systems-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  margin-top: 56px;
+}
+.system-card {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 32px 28px;
+  transition: all 0.25s;
+}
+.system-card:hover { background: rgba(255,255,255,0.04); transform: translateY(-3px); }
+.system-code { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--teal); letter-spacing: 0.1em; margin-bottom: 12px; }
+.system-name { font-size: 17px; font-weight: 500; margin-bottom: 10px; }
+.system-desc { font-size: 13px; font-weight: 300; line-height: 1.65; color: rgba(255,255,255,0.45); }
+.system-region { margin-top: 18px; display: flex; gap: 6px; flex-wrap: wrap; }
+.region-tag {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+}
+.legal-bar {
+  margin-top: 40px;
+  padding: 24px 28px;
+  background: rgba(245,166,35,0.05);
+  border: 1px solid rgba(245,166,35,0.15);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.legal-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold); letter-spacing: 0.1em; white-space: nowrap; }
+.legal-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.legal-tag {
+  padding: 4px 12px;
+  background: rgba(245,166,35,0.1);
+  border: 1px solid rgba(245,166,35,0.2);
+  border-radius: 3px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+}
+
+/* ─── GEOGRAPHY ─── */
+.geography {
+  padding: 100px 0;
+  background: linear-gradient(180deg, var(--navy-deep) 0%, #061828 100%);
+}
+.geo-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3px;
+  margin-top: 56px;
+}
+.geo-region {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.geo-region-header {
+  padding: 22px 26px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.geo-region-name { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; }
+.geo-countries { padding: 16px 26px; list-style: none; }
+.geo-country {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  transition: color 0.2s;
+}
+.geo-country:last-child { border-bottom: none; }
+.geo-country:hover { color: var(--white); }
+
+.geo-hubs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  margin-top: 3px;
+}
+.geo-hub {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 22px 26px;
+}
+.geo-hub-label { font-size: 10px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+.geo-hub-value { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.8; }
+
+/* ─── WHY US ─── */
+.why-us {
+  padding: 100px 0;
+  background: var(--navy-deep);
+}
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  margin-top: 56px;
+}
+.pillar {
+  padding: 44px 32px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: all 0.25s;
+}
+.pillar:hover { background: rgba(255,255,255,0.04); transform: translateY(-4px); }
+.pillar-number { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--teal); letter-spacing: 0.1em; margin-bottom: 20px; opacity: 0.7; }
+.pillar-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; margin-bottom: 14px; line-height: 1.2; }
+.pillar-desc { font-size: 14px; font-weight: 300; line-height: 1.75; color: rgba(255,255,255,0.5); }
+
+/* ─── PARTNERS ─── */
+.partners {
+  padding: 72px 0;
+  background: rgba(0,0,0,0.3);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.partners-label {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+  margin-bottom: 36px;
+}
+.banks-scroll { overflow: hidden; }
+.banks-track {
+  display: flex;
+  animation: ticker 30s linear infinite;
+}
+.bank-name {
+  flex-shrink: 0;
+  padding: 0 32px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.18);
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+/* ─── CONTACT ─── */
+.contact {
+  padding: 120px 0;
+  background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-mid) 100%);
+}
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.contact-channels { display: flex; flex-direction: column; gap: 3px; margin-top: 36px; }
+.contact-channel {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+}
+.contact-channel:hover { background: rgba(0,168,168,0.08); border-color: rgba(0,168,168,0.25); }
+.channel-icon {
+  width: 40px; height: 40px;
+  border-radius: 6px;
+  background: var(--teal-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.channel-label { font-size: 10px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--teal); margin-bottom: 4px; }
+.channel-value { font-size: 14px; color: rgba(255,255,255,0.7); }
+
+.contact-form {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 44px;
+}
+.form-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; margin-bottom: 6px; }
+.form-subtitle { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 28px; line-height: 1.6; }
+.form-group { margin-bottom: 18px; }
+.form-label { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 8px; }
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,0.2); }
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: rgba(0,168,168,0.5);
+  background: rgba(0,168,168,0.04);
+}
+.form-select { cursor: pointer; -webkit-appearance: none; }
+.form-select option { background: var(--navy); }
+.form-textarea { resize: vertical; min-height: 100px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-submit {
+  width: 100%;
+  background: var(--teal);
+  color: var(--navy-deep);
+  border: none;
+  border-radius: 4px;
+  padding: 14px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s;
+}
+.form-submit:hover { background: var(--teal-light); transform: translateY(-1px); }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--navy-deep);
+  border-top: 1px solid var(--border);
+  padding: 60px 0 40px;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 56px;
+  margin-bottom: 56px;
+}
+.footer-brand p { font-size: 13px; font-weight: 300; line-height: 1.7; color: rgba(255,255,255,0.3); margin-top: 14px; max-width: 260px; }
+.footer-col-title { font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 18px; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { text-decoration: none; font-size: 13px; color: rgba(255,255,255,0.4); transition: color 0.2s; }
+.footer-links a:hover { color: var(--white); }
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+.footer-legal { font-size: 11px; color: rgba(255,255,255,0.2); line-height: 1.6; max-width: 540px; }
+.footer-compliance { display: flex; gap: 12px; flex-shrink: 0; }
+.compliance-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: rgba(0,168,168,0.5);
+  padding: 4px 10px;
+  border: 1px solid rgba(0,168,168,0.2);
+  border-radius: 2px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ═══════════════════════════════════
+   RESPONSIVE — TABLET (max 1024px)
+═══════════════════════════════════ */
+@media (max-width: 1024px) {
+  nav { padding: 0 32px; }
+  .section-inner { padding: 0 32px; }
+  .footer-inner { padding: 0 32px; }
+  .hero { padding: 120px 32px 160px; }
+  .trade-lines { width: 360px; right: 32px; }
+  .instruments-layout { grid-template-columns: 240px 1fr; gap: 48px; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+
+/* ═══════════════════════════════════
+   RESPONSIVE — MOBILE (max 768px)
+═══════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Nav */
+  nav { padding: 0 20px; height: 64px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .mobile-menu { top: 64px; }
+
+  /* Hero */
+  .hero { padding: 100px 20px 0; min-height: auto; }
+  .trade-lines { display: none; }
+  .hero-glow { width: 300px; height: 300px; right: -80px; opacity: 0.5; }
+  .hero h1 { font-size: clamp(36px, 10vw, 52px); }
+  .hero-desc { font-size: 15px; }
+  .hero-actions { flex-direction: column; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+
+  /* Hero stats — 2x2 grid */
   .hero-stats {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border-top: 1px solid var(--border);
-    display: flex;
-    background: rgba(6,24,40,0.6);
-    backdrop-filter: blur(10px);
-    animation: fadeUp 0.8s 0.5s ease both;
-  }
-
-  .stat-item {
-    flex: 1;
-    padding: 24px 40px;
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .stat-item:last-child { border-right: none; }
-
-  .stat-value {
-    font-family: 'DM Mono', monospace;
-    font-size: 26px;
-    font-weight: 500;
-    color: var(--white);
-    letter-spacing: -0.02em;
-  }
-
-  .stat-value span { color: var(--teal); }
-
-  .stat-label {
-    font-size: 11px;
-    font-weight: 400;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gray-mid);
-  }
-
-  /* ─── TICKER TAPE ─── */
-  .ticker-wrap {
-    background: var(--teal-dim);
-    border-top: 1px solid rgba(0,168,168,0.2);
-    border-bottom: 1px solid rgba(0,168,168,0.2);
-    padding: 10px 0;
-    overflow: hidden;
     position: relative;
-  }
-
-  .ticker-track {
-    display: flex;
-    gap: 0;
-    animation: ticker 40s linear infinite;
-    white-space: nowrap;
-  }
-
-  .ticker-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 0 32px;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--gray-mid);
-    border-right: 1px solid rgba(0,168,168,0.2);
-  }
-
-  .ticker-item .symbol { color: var(--white); font-weight: 500; }
-  .ticker-item .up { color: #22c55e; }
-  .ticker-item .down { color: #ef4444; }
-
-  /* ─── SECTION BASE ─── */
-  section {
-    position: relative;
-    z-index: 1;
-  }
-
-  .section-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 60px;
-  }
-
-  .section-header {
-    margin-bottom: 60px;
-  }
-
-  .section-eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .section-eyebrow .line {
-    width: 24px;
-    height: 1px;
-    background: var(--teal);
-  }
-
-  .section-eyebrow span {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--teal);
-  }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(36px, 4vw, 54px);
-    font-weight: 300;
-    line-height: 1.1;
-    color: var(--white);
-  }
-
-  .section-title em { font-style: italic; color: var(--teal); }
-
-  .section-subtitle {
-    margin-top: 16px;
-    font-size: 16px;
-    font-weight: 300;
-    color: rgba(255,255,255,0.55);
-    max-width: 560px;
-    line-height: 1.7;
-  }
-
-  /* ─── DUAL MANDATE SECTION ─── */
-  .dual-mandate {
-    padding: 100px 0;
-    background: linear-gradient(180deg, var(--navy-deep) 0%, #081e34 100%);
-  }
-
-  .mandate-grid {
-    display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    margin-top: 60px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    overflow: hidden;
+    margin-top: 48px;
   }
+  .stat-item { padding: 20px; border-right: 1px solid var(--border) !important; border-bottom: 1px solid var(--border); }
+  .stat-item:nth-child(2) { border-right: none !important; }
+  .stat-item:nth-child(3) { border-bottom: none; }
+  .stat-item:nth-child(4) { border-right: none !important; border-bottom: none; }
+  .stat-value { font-size: 20px; }
 
-  .mandate-card {
-    background: rgba(255,255,255,0.02);
-    padding: 56px 48px;
-    position: relative;
-    transition: background 0.3s;
-  }
+  /* Ticker */
+  .section-inner { padding: 0 20px; }
+  .footer-inner { padding: 0 20px; }
 
-  .mandate-card:hover {
-    background: rgba(255,255,255,0.04);
-  }
+  /* Sections */
+  .dual-mandate, .instruments, .commodities, .payment-systems,
+  .geography, .why-us, .contact, .partners { padding: 72px 0; }
 
-  .mandate-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-  }
+  /* Dual mandate */
+  .mandate-grid { grid-template-columns: 1fr; }
+  .mandate-card { padding: 36px 28px; }
+  .mandate-title { font-size: 26px; }
 
-  .mandate-card.trade::before { background: var(--teal); }
-  .mandate-card.finance::before { background: var(--gold); }
-
-  .mandate-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 28px;
-    font-size: 22px;
-  }
-
-  .mandate-card.trade .mandate-icon { background: var(--teal-dim); }
-  .mandate-card.finance .mandate-icon { background: var(--gold-dim); }
-
-  .mandate-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-  }
-
-  .mandate-card.trade .mandate-label { color: var(--teal); }
-  .mandate-card.finance .mandate-label { color: var(--gold); }
-
-  .mandate-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 32px;
-    font-weight: 400;
-    line-height: 1.2;
-    margin-bottom: 20px;
-  }
-
-  .mandate-desc {
-    font-size: 15px;
-    font-weight: 300;
-    line-height: 1.75;
-    color: rgba(255,255,255,0.55);
-    margin-bottom: 32px;
-  }
-
-  .mandate-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .mandate-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 13px;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.5;
-  }
-
-  .mandate-list li::before {
-    content: '—';
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .mandate-card.trade .mandate-list li::before { color: var(--teal); }
-  .mandate-card.finance .mandate-list li::before { color: var(--gold); }
-
-  /* ─── FINANCIAL INSTRUMENTS ─── */
-  .instruments {
-    padding: 100px 0;
-    background: var(--navy-deep);
-  }
-
-  .instruments-layout {
-    display: grid;
-    grid-template-columns: 340px 1fr;
-    gap: 80px;
-    align-items: start;
-  }
-
-  .instruments-sidebar {
-    position: sticky;
-    top: 100px;
-  }
-
-  .instruments-nav {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    margin-top: 32px;
-  }
-
+  /* Instruments */
+  .instruments-layout { grid-template-columns: 1fr; gap: 36px; }
+  .instruments-sidebar { position: static; }
+  .instruments-nav { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+  .instruments-nav li { flex: 0 0 auto; }
   .instruments-nav li button {
-    width: 100%;
-    text-align: left;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 14px 20px;
+    border-left: none;
+    border-bottom: 2px solid transparent;
     border-radius: 4px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    color: rgba(255,255,255,0.45);
-    transition: all 0.2s;
-    border-left: 2px solid transparent;
-  }
-
-  .instruments-nav li button:hover {
-    color: var(--white);
-    background: rgba(255,255,255,0.04);
-  }
-
-  .instruments-nav li button.active {
-    color: var(--teal);
-    background: var(--teal-dim);
-    border-left-color: var(--teal);
-  }
-
-  .instruments-content {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .instrument-panel { display: none; }
-  .instrument-panel.active { display: block; }
-
-  .instrument-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 3px;
-  }
-
-  .instrument-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 24px;
-    transition: all 0.2s;
-    cursor: default;
-  }
-
-  .instrument-card:hover {
-    background: rgba(0,168,168,0.06);
-    border-color: rgba(0,168,168,0.2);
-    transform: translateY(-2px);
-  }
-
-  .instrument-card-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--white);
-    margin-bottom: 8px;
-  }
-
-  .instrument-card-desc {
+    padding: 8px 12px;
     font-size: 12px;
-    font-weight: 300;
-    line-height: 1.6;
-    color: rgba(255,255,255,0.45);
   }
+  .instruments-nav li button.active { border-left: none; border-bottom-color: var(--teal); }
+  .instrument-grid { grid-template-columns: 1fr; }
 
-  .instrument-tag {
-    display: inline-block;
-    margin-top: 12px;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 2px;
-    background: var(--teal-dim);
-    color: var(--teal);
-  }
-
-  /* ─── COMMODITIES ─── */
-  .commodities {
-    padding: 100px 0;
-    background: linear-gradient(180deg, #081e34 0%, var(--navy-deep) 100%);
-  }
-
+  /* Commodities */
   .commodities-tabs {
-    display: flex;
-    gap: 2px;
-    margin-bottom: 40px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 4px;
-    width: fit-content;
-  }
-
-  .tab-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px 24px;
-    border-radius: 4px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 400;
-    color: rgba(255,255,255,0.45);
-    transition: all 0.2s;
-    letter-spacing: 0.04em;
-  }
-
-  .tab-btn.active {
-    background: var(--teal);
-    color: var(--navy-deep);
-    font-weight: 500;
-  }
-
-  .commodities-panel { display: none; }
-  .commodities-panel.active { display: block; }
-
-  .commodities-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 2px;
-  }
-
-  .commodity-item {
-    background: rgba(255,255,255,0.025);
-    border: 1px solid var(--border);
-    padding: 16px 18px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    color: rgba(255,255,255,0.65);
-    transition: all 0.15s;
-    cursor: default;
-  }
-
-  .commodity-item:hover {
-    background: rgba(0,168,168,0.08);
-    border-color: rgba(0,168,168,0.25);
-    color: var(--white);
-  }
-
-  .commodity-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: rgba(255,255,255,0.2);
-    flex-shrink: 0;
-    width: 20px;
-  }
-
-  /* ─── PAYMENT SYSTEMS ─── */
-  .payment-systems {
-    padding: 100px 0;
-    background: var(--navy-deep);
-  }
-
-  .systems-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 3px;
-    margin-top: 60px;
-  }
-
-  .system-card {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 36px 32px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.25s;
-  }
-
-  .system-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--teal), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .system-card:hover {
-    background: rgba(255,255,255,0.04);
-    transform: translateY(-3px);
-  }
-
-  .system-card:hover::after { opacity: 1; }
-
-  .system-code {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--teal);
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
-  }
-
-  .system-name {
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--white);
-    margin-bottom: 10px;
-  }
-
-  .system-desc {
-    font-size: 13px;
-    font-weight: 300;
-    line-height: 1.65;
-    color: rgba(255,255,255,0.45);
-  }
-
-  .system-region {
-    margin-top: 20px;
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .region-tag {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    padding: 3px 8px;
-    border-radius: 2px;
-    background: rgba(255,255,255,0.06);
-    color: rgba(255,255,255,0.4);
-    text-transform: uppercase;
-  }
-
-  /* ─── GEOGRAPHIC FOCUS ─── */
-  .geography {
-    padding: 100px 0;
-    background: linear-gradient(180deg, var(--navy-deep) 0%, #061828 100%);
-  }
-
-  .geo-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 3px;
-    margin-top: 60px;
-  }
-
-  .geo-region {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-  }
-
-  .geo-region-header {
-    padding: 24px 28px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .geo-flag {
-    font-size: 20px;
-  }
-
-  .geo-region-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
-    font-weight: 400;
-    color: var(--white);
-  }
-
-  .geo-countries {
-    padding: 20px 28px;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .geo-country {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 11px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    font-size: 13px;
-    color: rgba(255,255,255,0.6);
-    transition: color 0.2s;
-  }
-
-  .geo-country:last-child { border-bottom: none; }
-
-  .geo-country:hover { color: var(--white); }
-
-  .geo-country-flag { font-size: 16px; }
-
-  /* ─── WHY US ─── */
-  .why-us {
-    padding: 100px 0;
-    background: var(--navy-deep);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .why-us::before {
-    content: '';
-    position: absolute;
-    left: -200px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(0,168,168,0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .pillars-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 3px;
-    margin-top: 60px;
-  }
-
-  .pillar {
-    padding: 48px 36px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    transition: all 0.25s;
-  }
-
-  .pillar:hover {
-    background: rgba(255,255,255,0.04);
-    transform: translateY(-4px);
-  }
-
-  .pillar-number {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--teal);
-    letter-spacing: 0.1em;
-    margin-bottom: 24px;
-    opacity: 0.7;
-  }
-
-  .pillar-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 400;
-    color: var(--white);
-    margin-bottom: 14px;
-    line-height: 1.2;
-  }
-
-  .pillar-desc {
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 1.75;
-    color: rgba(255,255,255,0.5);
-  }
-
-  /* ─── BANKS / PARTNERS ─── */
-  .partners {
-    padding: 80px 0;
-    background: rgba(0,0,0,0.3);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .partners-label {
-    text-align: center;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.25);
-    margin-bottom: 40px;
-  }
-
-  .banks-scroll {
-    overflow: hidden;
-    position: relative;
-  }
-
-  .banks-track {
-    display: flex;
-    gap: 0;
-    animation: ticker 30s linear infinite;
-  }
-
-  .bank-name {
-    flex-shrink: 0;
-    padding: 0 36px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px;
-    font-weight: 300;
-    color: rgba(255,255,255,0.2);
-    border-right: 1px solid var(--border);
-    white-space: nowrap;
-    transition: color 0.2s;
-    letter-spacing: 0.03em;
-  }
-
-  /* ─── CONTACT / CTA ─── */
-  .contact {
-    padding: 120px 0;
-    background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-mid) 100%);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .contact::before {
-    content: '';
-    position: absolute;
-    right: -100px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .contact-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-  }
-
-  .contact-left .section-title { margin-bottom: 20px; }
-
-  .contact-channels {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    margin-top: 40px;
-  }
-
-  .contact-channel {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px 24px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    transition: all 0.2s;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .contact-channel:hover {
-    background: rgba(0,168,168,0.08);
-    border-color: rgba(0,168,168,0.25);
-  }
-
-  .channel-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 6px;
-    background: var(--teal-dim);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-  }
-
-  .channel-info .label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--teal);
-    margin-bottom: 4px;
-  }
-
-  .channel-info .value {
-    font-size: 15px;
-    color: rgba(255,255,255,0.75);
-  }
-
-  /* Contact form */
-  .contact-form {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 48px;
-  }
-
-  .form-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 400;
-    margin-bottom: 8px;
-  }
-
-  .form-subtitle {
-    font-size: 13px;
-    color: rgba(255,255,255,0.4);
-    margin-bottom: 32px;
-    line-height: 1.6;
-  }
-
-  .form-group {
-    margin-bottom: 20px;
-  }
-
-  .form-label {
-    display: block;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.4);
-    margin-bottom: 8px;
-  }
-
-  .form-input {
     width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 13px 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--white);
-    transition: border-color 0.2s;
-    outline: none;
-  }
-
-  .form-input::placeholder { color: rgba(255,255,255,0.2); }
-
-  .form-input:focus {
-    border-color: rgba(0,168,168,0.5);
-    background: rgba(0,168,168,0.04);
-  }
-
-  .form-select {
-    width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 13px 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--white);
-    transition: border-color 0.2s;
-    outline: none;
-    -webkit-appearance: none;
-    cursor: pointer;
-  }
-
-  .form-select option { background: var(--navy); }
-
-  .form-textarea {
-    width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 13px 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    color: var(--white);
-    transition: border-color 0.2s;
-    outline: none;
-    resize: vertical;
-    min-height: 100px;
-  }
-
-  .form-textarea::placeholder { color: rgba(255,255,255,0.2); }
-  .form-textarea:focus { border-color: rgba(0,168,168,0.5); }
-
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-  .form-submit {
-    width: 100%;
-    background: var(--teal);
-    color: var(--navy-deep);
-    border: none;
-    border-radius: 4px;
-    padding: 15px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    letter-spacing: 0.04em;
-    transition: all 0.2s;
-    margin-top: 8px;
-  }
-
-  .form-submit:hover {
-    background: var(--teal-light);
-    transform: translateY(-1px);
-  }
-
-  /* ─── FOOTER ─── */
-  footer {
-    background: var(--navy-deep);
-    border-top: 1px solid var(--border);
-    padding: 60px 0 40px;
-  }
-
-  .footer-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 60px;
-  }
-
-  .footer-top {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 60px;
-    margin-bottom: 60px;
-  }
-
-  .footer-brand p {
-    font-size: 14px;
-    font-weight: 300;
-    line-height: 1.7;
-    color: rgba(255,255,255,0.35);
-    margin-top: 16px;
-    max-width: 280px;
-  }
-
-  .footer-col-title {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.3);
-    margin-bottom: 20px;
-  }
-
-  .footer-links {
-    list-style: none;
-    display: flex;
     flex-direction: column;
-    gap: 10px;
   }
+  .tab-btn { text-align: left; }
+  .commodities-grid { grid-template-columns: 1fr 1fr; }
 
-  .footer-links a {
-    text-decoration: none;
-    font-size: 13px;
-    color: rgba(255,255,255,0.45);
-    transition: color 0.2s;
-  }
+  /* Payment systems */
+  .systems-grid { grid-template-columns: 1fr; }
+  .legal-bar { flex-direction: column; align-items: flex-start; gap: 12px; }
 
-  .footer-links a:hover { color: var(--white); }
+  /* Geography */
+  .geo-layout { grid-template-columns: 1fr; }
+  .geo-hubs { grid-template-columns: 1fr; }
 
-  .footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 32px;
-    border-top: 1px solid var(--border);
-  }
+  /* Why us */
+  .pillars-grid { grid-template-columns: 1fr; }
+  .pillar { padding: 32px 24px; }
 
-  .footer-legal {
-    font-size: 12px;
-    color: rgba(255,255,255,0.25);
-  }
+  /* Contact */
+  .contact-layout { grid-template-columns: 1fr; gap: 48px; }
+  .contact-form { padding: 28px 22px; }
+  .form-row { grid-template-columns: 1fr; }
 
-  .footer-compliance {
-    display: flex;
-    gap: 16px;
-  }
+  /* Footer */
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 36px; }
+  .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
+  .footer-compliance { justify-content: center; flex-wrap: wrap; }
+  .footer-legal { max-width: 100%; text-align: center; }
+}
 
-  .compliance-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: rgba(0,168,168,0.6);
-    padding: 4px 10px;
-    border: 1px solid rgba(0,168,168,0.2);
-    border-radius: 2px;
-    letter-spacing: 0.08em;
-  }
-
-  /* ─── ANIMATIONS ─── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes ticker {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-
-  .live-dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--teal);
-    animation: pulse 2s ease infinite;
-    margin-right: 6px;
-  }
-
-  /* Scroll reveal */
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* ─── HAMBURGER BUTTON (hidden on desktop) ─── */
-  .nav-mobile-toggle {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
-    cursor: pointer;
-    padding: 8px;
-    background: none;
-    border: none;
-    flex-shrink: 0;
-  }
-  .nav-mobile-toggle span {
-    display: block;
-    width: 22px;
-    height: 1.5px;
-    background: var(--white);
-    transition: all 0.25s;
-    border-radius: 2px;
-  }
-  .nav-mobile-open .nav-mobile-toggle span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-  .nav-mobile-open .nav-mobile-toggle span:nth-child(2) { opacity: 0; }
-  .nav-mobile-open .nav-mobile-toggle span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
-
-  /* ─── MOBILE MENU OVERLAY ─── */
-  .mobile-menu-open {
-    display: flex !important;
-    flex-direction: column !important;
-    position: fixed !important;
-    top: 60px !important;
-    left: 0 !important;
-    right: 0 !important;
-    background: rgba(6,24,40,0.98) !important;
-    backdrop-filter: blur(20px) !important;
-    padding: 16px !important;
-    gap: 2px !important;
-    border-bottom: 1px solid var(--border) !important;
-    z-index: 99 !important;
-    width: 100% !important;
-  }
-  .mobile-menu-open li { width: 100% !important; }
-  .mobile-menu-open a {
-    padding: 14px 16px !important;
-    font-size: 15px !important;
-    border-radius: 6px !important;
-    display: block !important;
-    width: 100% !important;
-  }
-  .mobile-menu-open .nav-cta {
-    margin-top: 8px !important;
-    display: block !important;
-    text-align: center !important;
-  }
-
-  /* ─── TABLET & MOBILE: hide nav links, show hamburger ─── */
-  @media (max-width: 900px) {
-    nav { padding: 0 20px; height: 60px; }
-    .nav-links { display: none; }
-    .nav-mobile-toggle { display: flex; }
-    .section-inner { padding: 0 20px; }
-
-    /* Hero */
-    .hero { padding: 80px 20px 200px; min-height: 100vh; }
-    .trade-lines { display: none; }
-    .hero-glow { width: 280px; height: 280px; right: -60px; }
-    .hero-glow-gold { display: none; }
-    .hero h1 { font-size: clamp(36px, 9vw, 56px); }
-    .hero-desc { font-size: 15px; max-width: 100%; }
-    .hero-actions { flex-direction: column; gap: 12px; }
-    .btn-primary, .btn-secondary { width: 100%; justify-content: center; padding: 15px 20px; }
-
-    /* Stats bar — stack 2x2 */
-    .hero-stats {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      flex-wrap: wrap;
-    }
-    .stat-item {
-      flex: 1 1 50%;
-      padding: 16px 20px;
-      border-right: none !important;
-      border-bottom: 1px solid var(--border);
-    }
-    .stat-item:nth-child(1),
-    .stat-item:nth-child(3) { border-right: 1px solid var(--border) !important; }
-    .stat-item:nth-child(3),
-    .stat-item:nth-child(4) { border-bottom: none; }
-    .stat-value { font-size: 22px; }
-
-    /* Sections */
-    .dual-mandate { padding: 72px 0; }
-    .instruments  { padding: 72px 0; }
-    .commodities  { padding: 72px 0; }
-    .payment-systems { padding: 72px 0; }
-    .geography    { padding: 72px 0; }
-    .why-us       { padding: 72px 0; }
-    .contact      { padding: 72px 0; }
-    .partners     { padding: 48px 0; }
-
-    .section-title { font-size: clamp(28px, 6vw, 42px); }
-
-    /* Dual mandate */
-    .mandate-grid { grid-template-columns: 1fr; gap: 3px; }
-    .mandate-card { padding: 36px 28px; }
-    .mandate-title { font-size: 26px; }
-
-    /* Instruments */
-    .instruments-layout { grid-template-columns: 1fr; gap: 32px; }
-    .instruments-sidebar { position: static; }
-    .instruments-nav { flex-direction: row; flex-wrap: wrap; gap: 4px; margin-top: 16px; }
-    .instruments-nav li { flex: 0 0 auto; }
-    .instruments-nav li button {
-      border-left: none;
-      border-bottom: 2px solid transparent;
-      border-radius: 4px;
-      padding: 8px 12px;
-      font-size: 12px;
-    }
-    .instruments-nav li button.active {
-      border-left: none;
-      border-bottom-color: var(--teal);
-      background: var(--teal-dim);
-    }
-    .instrument-grid { grid-template-columns: 1fr; }
-
-    /* Commodities */
-    .commodities-tabs { width: 100%; flex-direction: column; }
-    .tab-btn { width: 100%; text-align: left; border-radius: 4px; padding: 12px 16px; }
-    .commodities-grid { grid-template-columns: 1fr 1fr; gap: 2px; }
-    .commodity-item { font-size: 12px; padding: 12px; }
-
-    /* Payment systems */
-    .systems-grid { grid-template-columns: 1fr; }
-
-    /* Geography */
-    .geo-layout { grid-template-columns: 1fr; gap: 3px; }
-
-    /* Why us */
-    .pillars-grid { grid-template-columns: 1fr; gap: 3px; }
-    .pillar { padding: 32px 24px; }
-
-    /* Contact — FULL WIDTH single column */
-    .contact-layout {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    .contact-left { width: 100%; }
-    .contact-form { padding: 28px 20px; width: 100%; }
-    .form-row { grid-template-columns: 1fr; gap: 0; }
-
-    /* Footer */
-    .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; }
-    .footer-inner { padding: 0 20px; }
-    .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
-    .footer-compliance { justify-content: center; flex-wrap: wrap; }
-  }
-
-  /* ─── SMALL PHONES: 480px ─── */
-  @media (max-width: 480px) {
-    nav { padding: 0 16px; }
-    .logo-text .brand { font-size: 17px; }
-    .section-inner { padding: 0 16px; }
-    .hero { padding: 76px 16px 220px; }
-    .hero h1 { font-size: 34px; }
-    .stat-value { font-size: 19px; }
-    .stat-label { font-size: 10px; }
-    .commodities-grid { grid-template-columns: 1fr 1fr; }
-    .footer-top { grid-template-columns: 1fr; gap: 28px; }
-    .footer-inner { padding: 0 16px; }
-    .contact-form { padding: 24px 16px; }
-    .mandate-card { padding: 28px 20px; }
-    .pillar { padding: 28px 20px; }
-    .system-card { padding: 24px 18px; }
-  }
+/* ═══════════════════════════════════
+   RESPONSIVE — SMALL PHONES (max 480px)
+═══════════════════════════════════ */
+@media (max-width: 480px) {
+  nav { padding: 0 16px; }
+  .section-inner { padding: 0 16px; }
+  .footer-inner { padding: 0 16px; }
+  .hero { padding: 90px 16px 0; }
+  .hero h1 { font-size: 34px; }
+  .hero-desc { font-size: 14px; }
+  .commodities-grid { grid-template-columns: 1fr 1fr; }
+  .footer-top { grid-template-columns: 1fr; gap: 32px; }
+  .mandate-card { padding: 28px 20px; }
+  .contact-form { padding: 24px 16px; }
+  .systems-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
 <!-- ─── NAV ─── -->
 <nav>
   <a href="#" class="logo">
-    <svg class="logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="34" height="34" viewBox="0 0 36 36" fill="none">
       <circle cx="18" cy="18" r="15" stroke="#00A8A8" stroke-width="1"/>
       <ellipse cx="18" cy="18" rx="7" ry="15" stroke="#00A8A8" stroke-width="1" opacity="0.5"/>
       <line x1="3" y1="18" x2="33" y2="18" stroke="#00A8A8" stroke-width="1" opacity="0.5"/>
@@ -1468,90 +1035,74 @@
       <span class="sub">Intelligence</span>
     </div>
   </a>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="#mandate" onclick="closeMenu()">Services</a></li>
-    <li><a href="#instruments" onclick="closeMenu()">Instruments</a></li>
-    <li><a href="#commodities" onclick="closeMenu()">Commodities</a></li>
-    <li><a href="#systems" onclick="closeMenu()">Payment Systems</a></li>
-    <li><a href="#geography" onclick="closeMenu()">Regions</a></li>
-    <li><a href="#contact" class="nav-cta" onclick="closeMenu()">Connect</a></li>
+  <ul class="nav-links">
+    <li><a href="#mandate">Services</a></li>
+    <li><a href="#instruments">Instruments</a></li>
+    <li><a href="#commodities">Commodities</a></li>
+    <li><a href="#systems">Payment Systems</a></li>
+    <li><a href="#geography">Regions</a></li>
+    <li><a href="#contact" class="nav-cta">Connect</a></li>
   </ul>
-  <button class="nav-mobile-toggle" id="nav-toggle" onclick="toggleMenu()" aria-label="Toggle menu">
+  <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Menu">
     <span></span><span></span><span></span>
   </button>
 </nav>
 
+<!-- Mobile nav menu -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#mandate" onclick="closeNav()">Services</a>
+  <a href="#instruments" onclick="closeNav()">Instruments</a>
+  <a href="#commodities" onclick="closeNav()">Commodities</a>
+  <a href="#systems" onclick="closeNav()">Payment Systems</a>
+  <a href="#geography" onclick="closeNav()">Regions</a>
+  <a href="#contact" class="m-cta" onclick="closeNav()">Connect</a>
+</div>
+
 <!-- ─── HERO ─── -->
 <section class="hero">
-  <div class="hero-bg">
-    <div class="hero-grid"></div>
-    <div class="hero-glow"></div>
-    <div class="hero-glow-gold"></div>
-    <!-- SVG trade route illustration -->
-    <svg class="trade-lines" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- Globe outline -->
-      <circle cx="250" cy="200" r="160" stroke="rgba(0,168,168,0.12)" stroke-width="1"/>
-      <ellipse cx="250" cy="200" rx="80" ry="160" stroke="rgba(0,168,168,0.08)" stroke-width="1"/>
-      <line x1="90" y1="200" x2="410" y2="200" stroke="rgba(0,168,168,0.08)" stroke-width="1"/>
-      <line x1="250" y1="40" x2="250" y2="360" stroke="rgba(0,168,168,0.08)" stroke-width="1"/>
-      <!-- Latitude lines -->
-      <ellipse cx="250" cy="200" rx="155" ry="40" stroke="rgba(0,168,168,0.06)" stroke-width="0.5"/>
-      <ellipse cx="250" cy="150" rx="130" ry="32" stroke="rgba(0,168,168,0.06)" stroke-width="0.5"/>
-      <ellipse cx="250" cy="250" rx="130" ry="32" stroke="rgba(0,168,168,0.06)" stroke-width="0.5"/>
-      <!-- Trade routes -->
-      <path d="M130 160 Q200 100 310 170" stroke="#00A8A8" stroke-width="1.2" fill="none" stroke-dasharray="5 3" opacity="0.6"/>
-      <path d="M140 230 Q250 280 370 220" stroke="#F5A623" stroke-width="1.2" fill="none" stroke-dasharray="5 3" opacity="0.5"/>
-      <path d="M110 200 Q250 130 390 190" stroke="#00A8A8" stroke-width="0.8" fill="none" opacity="0.3"/>
-      <!-- City nodes -->
-      <circle cx="130" cy="160" r="4" fill="#00A8A8"/>
-      <circle cx="310" cy="170" r="4" fill="#00A8A8"/>
-      <circle cx="140" cy="230" r="3" fill="#F5A623"/>
-      <circle cx="370" cy="220" r="3" fill="#F5A623"/>
-      <circle cx="250" cy="155" r="3" fill="rgba(0,168,168,0.5)"/>
-      <!-- Moving dots on routes -->
-      <circle cx="220" cy="125" r="3" fill="#00A8A8" opacity="0.8">
-        <animateMotion dur="4s" repeatCount="indefinite">
-          <mpath href="#route1"/>
-        </animateMotion>
-      </circle>
-      <circle cx="0" cy="0" r="2.5" fill="#F5A623" opacity="0.8">
-        <animateMotion dur="5s" repeatCount="indefinite" begin="1s">
-          <mpath href="#route2"/>
-        </animateMotion>
-      </circle>
-      <defs>
-        <path id="route1" d="M130 160 Q200 100 310 170"/>
-        <path id="route2" d="M140 230 Q250 280 370 220"/>
-      </defs>
-      <!-- City labels -->
-      <text x="115" y="150" fill="rgba(255,255,255,0.3)" font-size="9" font-family="DM Mono">LON</text>
-      <text x="316" y="162" fill="rgba(255,255,255,0.3)" font-size="9" font-family="DM Mono">SGP</text>
-      <text x="125" y="246" fill="rgba(245,166,35,0.5)" font-size="9" font-family="DM Mono">NYC</text>
-      <text x="376" y="235" fill="rgba(245,166,35,0.5)" font-size="9" font-family="DM Mono">HKG</text>
-    </svg>
-  </div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <svg class="trade-lines" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="250" cy="200" r="160" stroke="rgba(0,168,168,0.12)" stroke-width="1"/>
+    <ellipse cx="250" cy="200" rx="80" ry="160" stroke="rgba(0,168,168,0.08)" stroke-width="1"/>
+    <line x1="90" y1="200" x2="410" y2="200" stroke="rgba(0,168,168,0.08)" stroke-width="1"/>
+    <ellipse cx="250" cy="200" rx="155" ry="40" stroke="rgba(0,168,168,0.06)" stroke-width="0.5"/>
+    <ellipse cx="250" cy="150" rx="130" ry="32" stroke="rgba(0,168,168,0.06)" stroke-width="0.5"/>
+    <ellipse cx="250" cy="250" rx="130" ry="32" stroke="rgba(0,168,168,0.06)" stroke-width="0.5"/>
+    <path d="M130 160 Q200 100 310 170" stroke="#00A8A8" stroke-width="1.2" fill="none" stroke-dasharray="5 3" opacity="0.6"/>
+    <path d="M140 230 Q250 280 370 220" stroke="#F5A623" stroke-width="1.2" fill="none" stroke-dasharray="5 3" opacity="0.5"/>
+    <path d="M110 200 Q250 130 390 190" stroke="#00A8A8" stroke-width="0.8" fill="none" opacity="0.3"/>
+    <circle cx="130" cy="160" r="4" fill="#00A8A8"/>
+    <circle cx="310" cy="170" r="4" fill="#00A8A8"/>
+    <circle cx="140" cy="230" r="3" fill="#F5A623"/>
+    <circle cx="370" cy="220" r="3" fill="#F5A623"/>
+    <circle cx="220" cy="125" r="3" fill="#00A8A8" opacity="0.8">
+      <animateMotion dur="4s" repeatCount="indefinite"><mpath href="#r1"/></animateMotion>
+    </circle>
+    <circle cx="0" cy="0" r="2.5" fill="#F5A623" opacity="0.8">
+      <animateMotion dur="5s" repeatCount="indefinite" begin="1s"><mpath href="#r2"/></animateMotion>
+    </circle>
+    <defs>
+      <path id="r1" d="M130 160 Q200 100 310 170"/>
+      <path id="r2" d="M140 230 Q250 280 370 220"/>
+    </defs>
+    <text x="115" y="150" fill="rgba(255,255,255,0.3)" font-size="9" font-family="DM Mono">LON</text>
+    <text x="316" y="162" fill="rgba(255,255,255,0.3)" font-size="9" font-family="DM Mono">SGP</text>
+    <text x="125" y="246" fill="rgba(245,166,35,0.5)" font-size="9" font-family="DM Mono">NYC</text>
+    <text x="376" y="235" fill="rgba(245,166,35,0.5)" font-size="9" font-family="DM Mono">HKG</text>
+  </svg>
 
   <div class="hero-content">
     <div class="hero-eyebrow">
       <div class="eyebrow-line"></div>
       <span class="eyebrow-text"><span class="live-dot"></span>Global Trade Intelligence Platform</span>
     </div>
-    <h1>
-      Unlock <em>Global Trade.</em><br>
-      Secure Your <span class="gold">Cross-Border</span><br>
-      Payments.
-    </h1>
-    <p class="hero-desc">
-      Your single platform for international product sourcing and high-value financial clearance. Connecting verified buyers, sellers, and the world's top financial institutions.
-    </p>
+    <h1>Unlock <em>Global Trade.</em><br>Secure Your <span class="gold">Cross-Border</span><br>Payments.</h1>
+    <p class="hero-desc">Your single platform for international product sourcing and high-value financial clearance. Connecting verified buyers, sellers, and the world's top financial institutions.</p>
     <div class="hero-actions">
-      <a href="#mandate" class="btn-primary">
-        Explore Services
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a href="#contact" class="btn-secondary">
-        Request Consultation
-      </a>
+      <a href="#mandate" class="btn-primary">Explore Services →</a>
+      <a href="#contact" class="btn-secondary">Request Consultation</a>
     </div>
   </div>
 
@@ -1578,31 +1129,31 @@
 <!-- ─── TICKER ─── -->
 <div class="ticker-wrap">
   <div class="ticker-track">
-    <div class="ticker-item"><span class="symbol">CRUDE OIL</span> <span class="up">▲ +1.24%</span></div>
-    <div class="ticker-item"><span class="symbol">XAU/USD</span> <span class="up">▲ +0.87%</span></div>
-    <div class="ticker-item"><span class="symbol">COPPER</span> <span class="down">▼ -0.32%</span></div>
-    <div class="ticker-item"><span class="symbol">WHEAT</span> <span class="up">▲ +2.11%</span></div>
-    <div class="ticker-item"><span class="symbol">EUR/USD</span> 1.0842 <span class="down">▼ -0.14%</span></div>
-    <div class="ticker-item"><span class="symbol">NATURAL GAS</span> <span class="up">▲ +3.05%</span></div>
-    <div class="ticker-item"><span class="symbol">SOYBEANS</span> <span class="down">▼ -0.67%</span></div>
-    <div class="ticker-item"><span class="symbol">LITHIUM</span> <span class="up">▲ +1.93%</span></div>
-    <div class="ticker-item"><span class="symbol">USD/CNY</span> 7.2318 <span class="up">▲ +0.08%</span></div>
-    <div class="ticker-item"><span class="symbol">IRON ORE</span> <span class="down">▼ -1.15%</span></div>
-    <div class="ticker-item"><span class="symbol">PALM OIL</span> <span class="up">▲ +0.56%</span></div>
-    <div class="ticker-item"><span class="symbol">COBALT</span> <span class="down">▼ -0.44%</span></div>
+    <div class="ticker-item"><span class="symbol">CRUDE OIL</span><span class="up">▲ +1.24%</span></div>
+    <div class="ticker-item"><span class="symbol">XAU/USD</span><span class="up">▲ +0.87%</span></div>
+    <div class="ticker-item"><span class="symbol">COPPER</span><span class="down">▼ -0.32%</span></div>
+    <div class="ticker-item"><span class="symbol">WHEAT</span><span class="up">▲ +2.11%</span></div>
+    <div class="ticker-item"><span class="symbol">EUR/USD</span>1.0842 <span class="down">▼ -0.14%</span></div>
+    <div class="ticker-item"><span class="symbol">NATURAL GAS</span><span class="up">▲ +3.05%</span></div>
+    <div class="ticker-item"><span class="symbol">SOYBEANS</span><span class="down">▼ -0.67%</span></div>
+    <div class="ticker-item"><span class="symbol">LITHIUM</span><span class="up">▲ +1.93%</span></div>
+    <div class="ticker-item"><span class="symbol">USD/CNY</span>7.2318 <span class="up">▲ +0.08%</span></div>
+    <div class="ticker-item"><span class="symbol">IRON ORE</span><span class="down">▼ -1.15%</span></div>
+    <div class="ticker-item"><span class="symbol">PALM OIL</span><span class="up">▲ +0.56%</span></div>
+    <div class="ticker-item"><span class="symbol">COBALT</span><span class="down">▼ -0.44%</span></div>
     <!-- duplicate for seamless loop -->
-    <div class="ticker-item"><span class="symbol">CRUDE OIL</span> <span class="up">▲ +1.24%</span></div>
-    <div class="ticker-item"><span class="symbol">XAU/USD</span> <span class="up">▲ +0.87%</span></div>
-    <div class="ticker-item"><span class="symbol">COPPER</span> <span class="down">▼ -0.32%</span></div>
-    <div class="ticker-item"><span class="symbol">WHEAT</span> <span class="up">▲ +2.11%</span></div>
-    <div class="ticker-item"><span class="symbol">EUR/USD</span> 1.0842 <span class="down">▼ -0.14%</span></div>
-    <div class="ticker-item"><span class="symbol">NATURAL GAS</span> <span class="up">▲ +3.05%</span></div>
-    <div class="ticker-item"><span class="symbol">SOYBEANS</span> <span class="down">▼ -0.67%</span></div>
-    <div class="ticker-item"><span class="symbol">LITHIUM</span> <span class="up">▲ +1.93%</span></div>
-    <div class="ticker-item"><span class="symbol">USD/CNY</span> 7.2318 <span class="up">▲ +0.08%</span></div>
-    <div class="ticker-item"><span class="symbol">IRON ORE</span> <span class="down">▼ -1.15%</span></div>
-    <div class="ticker-item"><span class="symbol">PALM OIL</span> <span class="up">▲ +0.56%</span></div>
-    <div class="ticker-item"><span class="symbol">COBALT</span> <span class="down">▼ -0.44%</span></div>
+    <div class="ticker-item"><span class="symbol">CRUDE OIL</span><span class="up">▲ +1.24%</span></div>
+    <div class="ticker-item"><span class="symbol">XAU/USD</span><span class="up">▲ +0.87%</span></div>
+    <div class="ticker-item"><span class="symbol">COPPER</span><span class="down">▼ -0.32%</span></div>
+    <div class="ticker-item"><span class="symbol">WHEAT</span><span class="up">▲ +2.11%</span></div>
+    <div class="ticker-item"><span class="symbol">EUR/USD</span>1.0842 <span class="down">▼ -0.14%</span></div>
+    <div class="ticker-item"><span class="symbol">NATURAL GAS</span><span class="up">▲ +3.05%</span></div>
+    <div class="ticker-item"><span class="symbol">SOYBEANS</span><span class="down">▼ -0.67%</span></div>
+    <div class="ticker-item"><span class="symbol">LITHIUM</span><span class="up">▲ +1.93%</span></div>
+    <div class="ticker-item"><span class="symbol">USD/CNY</span>7.2318 <span class="up">▲ +0.08%</span></div>
+    <div class="ticker-item"><span class="symbol">IRON ORE</span><span class="down">▼ -1.15%</span></div>
+    <div class="ticker-item"><span class="symbol">PALM OIL</span><span class="up">▲ +0.56%</span></div>
+    <div class="ticker-item"><span class="symbol">COBALT</span><span class="down">▼ -0.44%</span></div>
   </div>
 </div>
 
@@ -1614,7 +1165,6 @@
       <h2 class="section-title">A Dual-Mandate <em>Platform</em></h2>
       <p class="section-subtitle">Two distinct capabilities — one integrated platform connecting global trade flows and institutional financial settlement.</p>
     </div>
-
     <div class="mandate-grid reveal">
       <div class="mandate-card trade">
         <div class="mandate-icon">🌐</div>
@@ -1651,88 +1201,75 @@
   <div class="section-inner">
     <div class="section-header reveal">
       <div class="section-eyebrow"><div class="line"></div><span>Financial Instruments</span></div>
-      <h2 class="section-title">Every Major <em>Instrument</em><br>We Facilitate</h2>
+      <h2 class="section-title">Every Major <em>Instrument</em> We Facilitate</h2>
       <p class="section-subtitle">From Letters of Credit to blockchain settlements, our expertise spans the full spectrum of trade finance instruments.</p>
     </div>
-
     <div class="instruments-layout reveal">
       <div class="instruments-sidebar">
-        <p style="font-size:13px;color:rgba(255,255,255,0.4);line-height:1.6;">Select an instrument category to explore our capabilities in that area.</p>
+        <p class="instruments-desc">Select an instrument category to explore our capabilities.</p>
         <ul class="instruments-nav">
-          <li><button class="active" onclick="showPanel('lc', this)">Letters of Credit</button></li>
-          <li><button onclick="showPanel('bg', this)">Bank Guarantees</button></li>
-          <li><button onclick="showPanel('doc', this)">Documentary Collections</button></li>
-          <li><button onclick="showPanel('payment', this)">Payment Methods</button></li>
-          <li><button onclick="showPanel('advanced', this)">Advanced Instruments</button></li>
-          <li><button onclick="showPanel('digital', this)">Digital & Blockchain</button></li>
+          <li><button class="active" onclick="showPanel('lc',this)">Letters of Credit</button></li>
+          <li><button onclick="showPanel('bg',this)">Bank Guarantees</button></li>
+          <li><button onclick="showPanel('doc',this)">Documentary Collections</button></li>
+          <li><button onclick="showPanel('payment',this)">Payment Methods</button></li>
+          <li><button onclick="showPanel('advanced',this)">Advanced Instruments</button></li>
+          <li><button onclick="showPanel('digital',this)">Digital & Blockchain</button></li>
         </ul>
       </div>
-
       <div class="instruments-content">
-        <!-- Letters of Credit -->
         <div class="instrument-panel active" id="panel-lc">
           <div class="instrument-grid">
-            <div class="instrument-card"><div class="instrument-card-name">Sight LC</div><div class="instrument-card-desc">Payment made immediately upon presentation of compliant documents. Ideal for one-off high-value transactions.</div><span class="instrument-tag">Immediate</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Usance LC</div><div class="instrument-card-desc">Payment after a specified period (30, 60, 90 days) from bill of lading or sight. Provides buyer with liquidity buffer.</div><span class="instrument-tag">Deferred</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Sight LC</div><div class="instrument-card-desc">Payment made immediately upon presentation of compliant documents. Ideal for high-value one-off transactions.</div><span class="instrument-tag">Immediate</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Usance LC</div><div class="instrument-card-desc">Payment after a specified period (30, 60, 90 days). Provides buyer with a liquidity buffer.</div><span class="instrument-tag">Deferred</span></div>
             <div class="instrument-card"><div class="instrument-card-name">Confirmed LC</div><div class="instrument-card-desc">A second bank adds its confirmation, guaranteeing payment regardless of issuing bank risk.</div><span class="instrument-tag">Guaranteed</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Standby LC (SBLC)</div><div class="instrument-card-desc">Performance guarantee drawn only if the applicant fails to fulfill an obligation. Governs ISP98.</div><span class="instrument-tag">Guarantee</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Standby LC (SBLC)</div><div class="instrument-card-desc">Performance guarantee drawn only if the applicant fails to fulfill an obligation. Governed by ISP98.</div><span class="instrument-tag">Guarantee</span></div>
             <div class="instrument-card"><div class="instrument-card-name">Revolving LC</div><div class="instrument-card-desc">Covers multiple shipments under a single LC, automatically replenishing after each draw.</div><span class="instrument-tag">Recurring</span></div>
             <div class="instrument-card"><div class="instrument-card-name">Transferable LC</div><div class="instrument-card-desc">Allows the beneficiary to transfer credit to a second beneficiary. Common in commodity trading chains.</div><span class="instrument-tag">Transferable</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Back-to-Back LC</div><div class="instrument-card-desc">Two separate LCs for ultimate buyer and supplier, used when an intermediary is involved in the chain.</div><span class="instrument-tag">Intermediary</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Back-to-Back LC</div><div class="instrument-card-desc">Two separate LCs used when an intermediary is involved in the transaction chain.</div><span class="instrument-tag">Intermediary</span></div>
           </div>
-          <div style="margin-top:16px;padding:16px 20px;background:rgba(0,168,168,0.06);border:1px solid rgba(0,168,168,0.15);border-radius:6px;font-size:12px;color:rgba(255,255,255,0.45);">Governed by <strong style="color:var(--teal)">UCP 600</strong> — Uniform Customs and Practice for Documentary Credits</div>
+          <div class="ucp-note">Governed by <strong>UCP 600</strong> — Uniform Customs and Practice for Documentary Credits</div>
         </div>
-
-        <!-- Bank Guarantees -->
         <div class="instrument-panel" id="panel-bg">
           <div class="instrument-grid">
-            <div class="instrument-card"><div class="instrument-card-name">Performance Bond</div><div class="instrument-card-desc">Guarantees the seller's performance under the contract terms and delivery conditions.</div><span class="instrument-tag">Performance</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Advance Payment Guarantee</div><div class="instrument-card-desc">Secures any advance payment made by the buyer, ensuring return if seller defaults.</div><span class="instrument-tag">Advance</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Bid / Tender Bond</div><div class="instrument-card-desc">Ensures the bidder will honor the contract if awarded the bid. Common in large procurement.</div><span class="instrument-tag">Tender</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Performance Bond</div><div class="instrument-card-desc">Guarantees the seller's performance under contract terms and delivery conditions.</div><span class="instrument-tag">Performance</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Advance Payment Guarantee</div><div class="instrument-card-desc">Secures advance payments made by the buyer, ensuring return if seller defaults.</div><span class="instrument-tag">Advance</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Bid / Tender Bond</div><div class="instrument-card-desc">Ensures the bidder will honor the contract if awarded. Common in large procurement.</div><span class="instrument-tag">Tender</span></div>
             <div class="instrument-card"><div class="instrument-card-name">Payment Guarantee</div><div class="instrument-card-desc">Guarantees the buyer's payment obligation to the seller under the trade contract.</div><span class="instrument-tag">Payment</span></div>
           </div>
         </div>
-
-        <!-- Documentary Collections -->
         <div class="instrument-panel" id="panel-doc">
           <div class="instrument-grid">
-            <div class="instrument-card"><div class="instrument-card-name">Documents Against Payment (D/P)</div><div class="instrument-card-desc">Buyer pays at sight to obtain shipping documents. Lower cost than LC, moderate protection.</div><span class="instrument-tag">D/P</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Documents Against Acceptance (D/A)</div><div class="instrument-card-desc">Buyer accepts a time draft (promise to pay later) to obtain documents. URC 522 governed.</div><span class="instrument-tag">D/A</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Open Account</div><div class="instrument-card-desc">Seller ships and invoices; buyer pays at an agreed future date (Net 30/60/90). Common in established relationships.</div><span class="instrument-tag">Open</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Cash in Advance</div><div class="instrument-card-desc">Full or partial payment before shipment. Minimizes seller risk, burdens buyer with upfront capital.</div><span class="instrument-tag">Advance</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Documents Against Payment (D/P)</div><div class="instrument-card-desc">Buyer pays at sight to obtain shipping documents. Lower cost than LC with moderate protection.</div><span class="instrument-tag">D/P</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Documents Against Acceptance (D/A)</div><div class="instrument-card-desc">Buyer accepts a time draft to obtain documents. Governed by URC 522.</div><span class="instrument-tag">D/A</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Open Account</div><div class="instrument-card-desc">Seller ships and invoices; buyer pays at an agreed future date. Common in established relationships.</div><span class="instrument-tag">Open</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Cash in Advance</div><div class="instrument-card-desc">Full or partial payment before shipment. Minimizes seller risk; burdens buyer with upfront capital.</div><span class="instrument-tag">Advance</span></div>
           </div>
-          <div style="margin-top:16px;padding:16px 20px;background:rgba(0,168,168,0.06);border:1px solid rgba(0,168,168,0.15);border-radius:6px;font-size:12px;color:rgba(255,255,255,0.45);">Governed by <strong style="color:var(--teal)">URC 522</strong> — Uniform Rules for Collections</div>
+          <div class="ucp-note">Governed by <strong>URC 522</strong> — Uniform Rules for Collections</div>
         </div>
-
-        <!-- Payment Methods -->
         <div class="instrument-panel" id="panel-payment">
           <div class="instrument-grid">
-            <div class="instrument-card"><div class="instrument-card-name">Bills of Exchange</div><div class="instrument-card-desc">Sight drafts payable on demand; time drafts payable at a fixed future date. Used under LCs or collections.</div><span class="instrument-tag">Draft</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Bills of Exchange</div><div class="instrument-card-desc">Sight and time drafts used under LCs or collections for international trade settlement.</div><span class="instrument-tag">Draft</span></div>
             <div class="instrument-card"><div class="instrument-card-name">Promissory Notes</div><div class="instrument-card-desc">Written promise by the buyer to pay a specified amount to the seller on a certain date.</div><span class="instrument-tag">Promise</span></div>
             <div class="instrument-card"><div class="instrument-card-name">Bankers' Acceptances</div><div class="instrument-card-desc">A time draft accepted by a bank — a negotiable instrument tradeable in the money market.</div><span class="instrument-tag">Negotiable</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">SWIFT MT103</div><div class="instrument-card-desc">Single customer credit transfer. The standard message type for cross-border international payments.</div><span class="instrument-tag">SWIFT</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">SWIFT MT202</div><div class="instrument-card-desc">Bank-to-bank cover payment. Used for interbank settlements and cover payments (MT202 COV).</div><span class="instrument-tag">SWIFT</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">SWIFT MT760</div><div class="instrument-card-desc">Issuance of Standby LCs and Bank Guarantees via the global SWIFT messaging network.</div><span class="instrument-tag">SWIFT</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">SWIFT MT103</div><div class="instrument-card-desc">Single customer credit transfer. Standard for cross-border international payments.</div><span class="instrument-tag">SWIFT</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">SWIFT MT202</div><div class="instrument-card-desc">Bank-to-bank cover payment used for interbank settlements and cover payments.</div><span class="instrument-tag">SWIFT</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">SWIFT MT760</div><div class="instrument-card-desc">Issuance of Standby LCs and Bank Guarantees via the SWIFT messaging network.</div><span class="instrument-tag">SWIFT</span></div>
           </div>
         </div>
-
-        <!-- Advanced -->
         <div class="instrument-panel" id="panel-advanced">
           <div class="instrument-grid">
             <div class="instrument-card"><div class="instrument-card-name">Forfaiting</div><div class="instrument-card-desc">Seller sells medium-term receivables at a discount to a forfaiter on a without-recourse basis.</div><span class="instrument-tag">Without Recourse</span></div>
             <div class="instrument-card"><div class="instrument-card-name">Factoring</div><div class="instrument-card-desc">Seller assigns accounts receivable to a factor for immediate cash, typically with recourse.</div><span class="instrument-tag">Receivables</span></div>
             <div class="instrument-card"><div class="instrument-card-name">Trade Credit Insurance</div><div class="instrument-card-desc">Insures the seller against buyer default, enabling open account terms with protection.</div><span class="instrument-tag">Insurance</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Supply Chain Finance</div><div class="instrument-card-desc">Bank pays seller early at discount based on buyer's creditworthiness. Reverse factoring model.</div><span class="instrument-tag">SCF</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Supply Chain Finance</div><div class="instrument-card-desc">Bank pays seller early at a discount based on buyer's creditworthiness. Reverse factoring model.</div><span class="instrument-tag">SCF</span></div>
             <div class="instrument-card"><div class="instrument-card-name">Payment Netting</div><div class="instrument-card-desc">Offsetting receivables and payables between parties. Reduces gross settlement risk and cost.</div><span class="instrument-tag">Netting</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Multi-Currency Pools</div><div class="instrument-card-desc">Consolidation and reallocation of bulk cross-border treasury funds across multiple currencies.</div><span class="instrument-tag">Treasury</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Multi-Currency Pools</div><div class="instrument-card-desc">Consolidation of bulk cross-border treasury funds across multiple currencies.</div><span class="instrument-tag">Treasury</span></div>
           </div>
         </div>
-
-        <!-- Digital -->
         <div class="instrument-panel" id="panel-digital">
           <div class="instrument-grid">
-            <div class="instrument-card"><div class="instrument-card-name">Digital Letters of Credit</div><div class="instrument-card-desc">Electronic LCs via platforms like Bolero, essDocs, and TradeLens on distributed ledger technology.</div><span class="instrument-tag">DLT</span></div>
-            <div class="instrument-card"><div class="instrument-card-name">Crypto & Digital Assets</div><div class="instrument-card-desc">Secure, large-volume conversion and transfer of digital assets to fiat currency for institutional settlement.</div><span class="instrument-tag">Crypto</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Digital Letters of Credit</div><div class="instrument-card-desc">Electronic LCs via Bolero, essDocs, and TradeLens on distributed ledger technology.</div><span class="instrument-tag">DLT</span></div>
+            <div class="instrument-card"><div class="instrument-card-name">Crypto & Digital Assets</div><div class="instrument-card-desc">Secure large-volume conversion of digital assets to fiat currency for institutional settlement.</div><span class="instrument-tag">Crypto</span></div>
             <div class="instrument-card"><div class="instrument-card-name">Tokenized Payments</div><div class="instrument-card-desc">Blockchain-based tokenized payment settlement for cross-border high-value transactions.</div><span class="instrument-tag">Tokenized</span></div>
             <div class="instrument-card"><div class="instrument-card-name">SWIFT GPI Tracking</div><div class="instrument-card-desc">Global Payments Innovation — enhanced tracking and transparency for all cross-border payments.</div><span class="instrument-tag">GPI</span></div>
           </div>
@@ -1747,16 +1284,14 @@
   <div class="section-inner">
     <div class="section-header reveal">
       <div class="section-eyebrow"><div class="line"></div><span>Commodities</span></div>
-      <h2 class="section-title">100+ Commodities <em>Traded</em><br>Across Three Categories</h2>
+      <h2 class="section-title">100+ Commodities <em>Traded</em> Across Three Categories</h2>
       <p class="section-subtitle">From crude oil to rare earth elements, from wheat to specialty chemicals — we facilitate global movement of all major commodity classes.</p>
     </div>
-
     <div class="commodities-tabs reveal">
-      <button class="tab-btn active" onclick="showTab('minerals', this)">⛏ Mineral Commodities</button>
-      <button class="tab-btn" onclick="showTab('agri', this)">🌾 Agricultural Products</button>
-      <button class="tab-btn" onclick="showTab('chem', this)">⚗️ Chemical Products</button>
+      <button class="tab-btn active" onclick="showTab('minerals',this)">⛏ Mineral Commodities</button>
+      <button class="tab-btn" onclick="showTab('agri',this)">🌾 Agricultural Products</button>
+      <button class="tab-btn" onclick="showTab('chem',this)">⚗️ Chemical Products</button>
     </div>
-
     <div class="commodities-panel active" id="tab-minerals">
       <div class="commodities-grid">
         <div class="commodity-item"><span class="commodity-num">01</span>Crude Oil</div>
@@ -1791,7 +1326,6 @@
         <div class="commodity-item"><span class="commodity-num">30</span>Tungsten</div>
       </div>
     </div>
-
     <div class="commodities-panel" id="tab-agri">
       <div class="commodities-grid">
         <div class="commodity-item"><span class="commodity-num">01</span>Wheat</div>
@@ -1831,7 +1365,6 @@
         <div class="commodity-item"><span class="commodity-num">35</span>Fish / Aquaculture</div>
       </div>
     </div>
-
     <div class="commodities-panel" id="tab-chem">
       <div class="commodities-grid">
         <div class="commodity-item"><span class="commodity-num">01</span>Ethylene</div>
@@ -1879,10 +1412,9 @@
   <div class="section-inner">
     <div class="section-header reveal">
       <div class="section-eyebrow"><div class="line"></div><span>Clearing & Settlement</span></div>
-      <h2 class="section-title">Global Payment <em>Infrastructure</em><br>We Operate Within</h2>
+      <h2 class="section-title">Global Payment <em>Infrastructure</em> We Operate Within</h2>
       <p class="section-subtitle">Direct participation and advisory across every major institutional clearing system on earth.</p>
     </div>
-
     <div class="systems-grid reveal">
       <div class="system-card">
         <div class="system-code">SWIFT · GPI</div>
@@ -1917,23 +1449,20 @@
       <div class="system-card">
         <div class="system-code">FEDWIRE · ACH · EFT</div>
         <div class="system-name">US Federal Reserve</div>
-        <div class="system-desc">Fedwire for real-time gross settlement; Bulk ACH for mass payroll and vendor payables; EFT processing for recurring high-volume settlements.</div>
+        <div class="system-desc">Fedwire for real-time gross settlement; Bulk ACH for mass payables; EFT processing for recurring high-volume settlements.</div>
         <div class="system-region"><span class="region-tag">USA</span><span class="region-tag">USD</span></div>
       </div>
     </div>
-
-    <div style="margin-top: 40px; padding: 28px 32px; background: rgba(245,166,35,0.05); border: 1px solid rgba(245,166,35,0.15); border-radius: 6px;" class="reveal">
-      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:0.1em;">LEGAL FRAMEWORKS</div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">UCP 600</span>
-          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">URC 522</span>
-          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">ISP98</span>
-          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">UNCITRAL</span>
-          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">KYC / AML</span>
-          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">Sanctions Screening</span>
-          <span style="padding:5px 12px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:3px;font-size:12px;color:rgba(255,255,255,0.55);">TBML Monitoring</span>
-        </div>
+    <div class="legal-bar reveal">
+      <span class="legal-label">LEGAL FRAMEWORKS</span>
+      <div class="legal-tags">
+        <span class="legal-tag">UCP 600</span>
+        <span class="legal-tag">URC 522</span>
+        <span class="legal-tag">ISP98</span>
+        <span class="legal-tag">UNCITRAL</span>
+        <span class="legal-tag">KYC / AML</span>
+        <span class="legal-tag">Sanctions Screening</span>
+        <span class="legal-tag">TBML Monitoring</span>
       </div>
     </div>
   </div>
@@ -1944,63 +1473,51 @@
   <div class="section-inner">
     <div class="section-header reveal">
       <div class="section-eyebrow"><div class="line"></div><span>Geographic Focus</span></div>
-      <h2 class="section-title">Active Across <em>Three</em><br>Continents</h2>
+      <h2 class="section-title">Active Across <em>Three</em> Continents</h2>
       <p class="section-subtitle">Primary trade relationships spanning Europe, the Americas, and Asia — covering the world's most active commodity and financial corridors.</p>
     </div>
-
     <div class="geo-layout reveal">
       <div class="geo-region">
-        <div class="geo-region-header">
-          <span class="geo-flag">🌍</span>
-          <div class="geo-region-name">Europe</div>
-        </div>
+        <div class="geo-region-header"><span>🌍</span><div class="geo-region-name">Europe</div></div>
         <ul class="geo-countries">
-          <li class="geo-country"><span class="geo-country-flag">🇩🇪</span>Germany</li>
-          <li class="geo-country"><span class="geo-country-flag">🇳🇱</span>Netherlands</li>
-          <li class="geo-country"><span class="geo-country-flag">🇵🇱</span>Poland</li>
-          <li class="geo-country"><span class="geo-country-flag">🇬🇧</span>United Kingdom</li>
+          <li class="geo-country"><span>🇩🇪</span>Germany</li>
+          <li class="geo-country"><span>🇳🇱</span>Netherlands</li>
+          <li class="geo-country"><span>🇵🇱</span>Poland</li>
+          <li class="geo-country"><span>🇬🇧</span>United Kingdom</li>
         </ul>
       </div>
       <div class="geo-region">
-        <div class="geo-region-header">
-          <span class="geo-flag">🌎</span>
-          <div class="geo-region-name">Americas</div>
-        </div>
+        <div class="geo-region-header"><span>🌎</span><div class="geo-region-name">Americas</div></div>
         <ul class="geo-countries">
-          <li class="geo-country"><span class="geo-country-flag">🇺🇸</span>United States</li>
-          <li class="geo-country"><span class="geo-country-flag">🇲🇽</span>Mexico</li>
-          <li class="geo-country"><span class="geo-country-flag">🇧🇷</span>Brazil</li>
-          <li class="geo-country"><span class="geo-country-flag">🇨🇱</span>Chile</li>
+          <li class="geo-country"><span>🇺🇸</span>United States</li>
+          <li class="geo-country"><span>🇲🇽</span>Mexico</li>
+          <li class="geo-country"><span>🇧🇷</span>Brazil</li>
+          <li class="geo-country"><span>🇨🇱</span>Chile</li>
         </ul>
       </div>
       <div class="geo-region">
-        <div class="geo-region-header">
-          <span class="geo-flag">🌏</span>
-          <div class="geo-region-name">Asia</div>
-        </div>
+        <div class="geo-region-header"><span>🌏</span><div class="geo-region-name">Asia</div></div>
         <ul class="geo-countries">
-          <li class="geo-country"><span class="geo-country-flag">🇨🇳</span>China</li>
-          <li class="geo-country"><span class="geo-country-flag">🇻🇳</span>Vietnam</li>
-          <li class="geo-country"><span class="geo-country-flag">🇮🇳</span>India</li>
-          <li class="geo-country"><span class="geo-country-flag">🇯🇵</span>Japan</li>
-          <li class="geo-country"><span class="geo-country-flag">🇰🇷</span>South Korea</li>
+          <li class="geo-country"><span>🇨🇳</span>China</li>
+          <li class="geo-country"><span>🇻🇳</span>Vietnam</li>
+          <li class="geo-country"><span>🇮🇳</span>India</li>
+          <li class="geo-country"><span>🇯🇵</span>Japan</li>
+          <li class="geo-country"><span>🇰🇷</span>South Korea</li>
         </ul>
       </div>
     </div>
-
-    <!-- Trade hubs -->
-    <div style="margin-top:40px;display:flex;gap:3px;flex-wrap:wrap;" class="reveal">
-      <div style="flex:1;min-width:200px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:24px 28px;">
-        <div style="font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;">Trade Finance Hubs</div>
-        <div style="font-size:14px;color:rgba(255,255,255,0.6);line-height:2;">Singapore · London · New York · Hong Kong</div>
+    <div class="geo-hubs reveal">
+      <div class="geo-hub">
+        <div class="geo-hub-label">Trade Finance Hubs</div>
+        <div class="geo-hub-value">Singapore · London · New York · Hong Kong</div>
       </div>
-      <div style="flex:1;min-width:200px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:24px 28px;">
-        <div style="font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;">Institutions Referenced</div>
-        <div style="font-size:14px;color:rgba(255,255,255,0.6);line-height:2;">WTO · World Bank · IMF</div>
+      <div class="geo-hub">
+        <div class="geo-hub-label">Institutions Referenced</div>
+        <div class="geo-hub-value">WTO · World Bank · IMF</div>
       </div>
-      <div style="flex:1;min-width:200px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:6px;padding:24px 28px;">
-        <div style="font-size:10px;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:var(--teal);margin-bottom:10px;">Trade Agreements</div>
-        <div style="font-size:14px;color:rgba(255,255,255,0.6);line-height:2;">USMCA · RCEP · EU Single Market</div>
+      <div class="geo-hub">
+        <div class="geo-hub-label">Trade Agreements</div>
+        <div class="geo-hub-value">USMCA · RCEP · EU Single Market</div>
       </div>
     </div>
   </div>
@@ -2011,7 +1528,7 @@
   <div class="section-inner">
     <div class="section-header reveal">
       <div class="section-eyebrow"><div class="line"></div><span>Why Partner With Us</span></div>
-      <h2 class="section-title">Institutional-Grade<br><em>Trust & Expertise</em></h2>
+      <h2 class="section-title">Institutional-Grade <em>Trust & Expertise</em></h2>
     </div>
     <div class="pillars-grid reveal">
       <div class="pillar">
@@ -2033,42 +1550,13 @@
   </div>
 </section>
 
-<!-- ─── PARTNER BANKS ─── -->
+<!-- ─── PARTNERS ─── -->
 <div class="partners">
   <div class="partners-label">Consulting for the World's Top 100 Banks — including</div>
   <div class="banks-scroll">
     <div class="banks-track">
-      <span class="bank-name">JPMorgan Chase</span>
-      <span class="bank-name">Citigroup</span>
-      <span class="bank-name">HSBC</span>
-      <span class="bank-name">BNP Paribas</span>
-      <span class="bank-name">Deutsche Bank</span>
-      <span class="bank-name">Standard Chartered</span>
-      <span class="bank-name">Barclays</span>
-      <span class="bank-name">Goldman Sachs</span>
-      <span class="bank-name">Bank of America</span>
-      <span class="bank-name">Société Générale</span>
-      <span class="bank-name">UBS</span>
-      <span class="bank-name">Credit Agricole</span>
-      <span class="bank-name">ING Group</span>
-      <span class="bank-name">Rabobank</span>
-      <span class="bank-name">DBS Bank</span>
-      <!-- duplicate -->
-      <span class="bank-name">JPMorgan Chase</span>
-      <span class="bank-name">Citigroup</span>
-      <span class="bank-name">HSBC</span>
-      <span class="bank-name">BNP Paribas</span>
-      <span class="bank-name">Deutsche Bank</span>
-      <span class="bank-name">Standard Chartered</span>
-      <span class="bank-name">Barclays</span>
-      <span class="bank-name">Goldman Sachs</span>
-      <span class="bank-name">Bank of America</span>
-      <span class="bank-name">Société Générale</span>
-      <span class="bank-name">UBS</span>
-      <span class="bank-name">Credit Agricole</span>
-      <span class="bank-name">ING Group</span>
-      <span class="bank-name">Rabobank</span>
-      <span class="bank-name">DBS Bank</span>
+      <span class="bank-name">JPMorgan Chase</span><span class="bank-name">Citigroup</span><span class="bank-name">HSBC</span><span class="bank-name">BNP Paribas</span><span class="bank-name">Deutsche Bank</span><span class="bank-name">Standard Chartered</span><span class="bank-name">Barclays</span><span class="bank-name">Goldman Sachs</span><span class="bank-name">Bank of America</span><span class="bank-name">Société Générale</span><span class="bank-name">UBS</span><span class="bank-name">Credit Agricole</span><span class="bank-name">ING Group</span><span class="bank-name">Rabobank</span><span class="bank-name">DBS Bank</span>
+      <span class="bank-name">JPMorgan Chase</span><span class="bank-name">Citigroup</span><span class="bank-name">HSBC</span><span class="bank-name">BNP Paribas</span><span class="bank-name">Deutsche Bank</span><span class="bank-name">Standard Chartered</span><span class="bank-name">Barclays</span><span class="bank-name">Goldman Sachs</span><span class="bank-name">Bank of America</span><span class="bank-name">Société Générale</span><span class="bank-name">UBS</span><span class="bank-name">Credit Agricole</span><span class="bank-name">ING Group</span><span class="bank-name">Rabobank</span><span class="bank-name">DBS Bank</span>
     </div>
   </div>
 </div>
@@ -2079,54 +1567,32 @@
     <div class="contact-layout">
       <div class="contact-left reveal">
         <div class="section-eyebrow"><div class="line"></div><span>Get In Touch</span></div>
-        <h2 class="section-title">Take Your Products —<br>and Payments — <em>Global.</em></h2>
+        <h2 class="section-title">Take Your Products — and Payments — <em>Global.</em></h2>
         <p class="section-subtitle" style="margin-top:20px;">Whether you're a commodity seller seeking international buyers, or a financial institution requiring high-stakes clearance consulting — we're ready to engage.</p>
         <div class="contact-channels">
           <a href="mailto:contact@atlastrade.io" class="contact-channel">
             <div class="channel-icon">✉</div>
-            <div class="channel-info">
-              <div class="label">Email</div>
-              <div class="value">contact@atlastrade.io</div>
-            </div>
+            <div><div class="channel-label">Email</div><div class="channel-value">contact@atlastrade.io</div></div>
           </a>
           <a href="#" class="contact-channel">
             <div class="channel-icon">🌐</div>
-            <div class="channel-info">
-              <div class="label">Trade Portal</div>
-              <div class="value">Trader Portal Login →</div>
-            </div>
+            <div><div class="channel-label">Trade Portal</div><div class="channel-value">Trader Portal Login →</div></div>
           </a>
           <a href="#" class="contact-channel">
             <div class="channel-icon">📞</div>
-            <div class="channel-info">
-              <div class="label">Institutional Desk</div>
-              <div class="value">Available to verified partners</div>
-            </div>
+            <div><div class="channel-label">Institutional Desk</div><div class="channel-value">Available to verified partners</div></div>
           </a>
         </div>
       </div>
-
       <div class="contact-form reveal">
         <div class="form-title">Request a Consultation</div>
-        <p class="form-subtitle">For commodity sourcing, buyer matching, or institutional payment consulting. All submissions are reviewed by our team within 48 hours.</p>
+        <p class="form-subtitle">For commodity sourcing, buyer matching, or institutional payment consulting. All submissions reviewed within 48 hours.</p>
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label">First Name</label>
-            <input class="form-input" type="text" placeholder="John">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Last Name</label>
-            <input class="form-input" type="text" placeholder="Smith">
-          </div>
+          <div class="form-group"><label class="form-label">First Name</label><input class="form-input" type="text" placeholder="John"></div>
+          <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" type="text" placeholder="Smith"></div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Organization</label>
-          <input class="form-input" type="text" placeholder="Company or Institution">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input class="form-input" type="email" placeholder="john@company.com">
-        </div>
+        <div class="form-group"><label class="form-label">Organization</label><input class="form-input" type="text" placeholder="Company or Institution"></div>
+        <div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" placeholder="john@company.com"></div>
         <div class="form-group">
           <label class="form-label">I Am A</label>
           <select class="form-select">
@@ -2140,10 +1606,7 @@
             <option>Other</option>
           </select>
         </div>
-        <div class="form-group">
-          <label class="form-label">Inquiry Details</label>
-          <textarea class="form-textarea" placeholder="Describe your requirements — commodity type, volume, payment instrument needed, or consulting scope..."></textarea>
-        </div>
+        <div class="form-group"><label class="form-label">Inquiry Details</label><textarea class="form-textarea" placeholder="Describe your requirements — commodity type, volume, payment instrument needed, or consulting scope..."></textarea></div>
         <button class="form-submit" onclick="handleSubmit(this)">Submit Inquiry →</button>
       </div>
     </div>
@@ -2203,34 +1666,25 @@
 </footer>
 
 <script>
-// Mobile nav toggle
-function toggleMenu() {
-  const navLinks = document.getElementById('nav-links');
-  const toggle = document.getElementById('nav-toggle');
-  const isOpen = navLinks.classList.contains('mobile-menu-open');
-  if (isOpen) {
-    navLinks.classList.remove('mobile-menu-open');
-    toggle.setAttribute('aria-expanded', 'false');
-  } else {
-    navLinks.classList.add('mobile-menu-open');
-    toggle.setAttribute('aria-expanded', 'true');
-  }
+// ─── NAV TOGGLE ───
+function toggleNav() {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('hamburger');
+  const open = menu.classList.contains('open');
+  menu.classList.toggle('open', !open);
+  btn.classList.toggle('open', !open);
 }
-
-function closeMenu() {
-  const navLinks = document.getElementById('nav-links');
-  const toggle = document.getElementById('nav-toggle');
-  navLinks.classList.remove('mobile-menu-open');
-  if (toggle) toggle.setAttribute('aria-expanded', 'false');
+function closeNav() {
+  document.getElementById('mobile-menu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
 }
-
-// Close menu on outside click
 document.addEventListener('click', function(e) {
   const nav = document.querySelector('nav');
-  if (!nav.contains(e.target)) closeMenu();
+  const menu = document.getElementById('mobile-menu');
+  if (!nav.contains(e.target) && !menu.contains(e.target)) closeNav();
 });
 
-// Instrument panel switcher
+// ─── INSTRUMENT TABS ───
 function showPanel(id, btn) {
   document.querySelectorAll('.instrument-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.instruments-nav button').forEach(b => b.classList.remove('active'));
@@ -2238,7 +1692,7 @@ function showPanel(id, btn) {
   btn.classList.add('active');
 }
 
-// Commodities tab switcher
+// ─── COMMODITY TABS ───
 function showTab(id, btn) {
   document.querySelectorAll('.commodities-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -2246,7 +1700,7 @@ function showTab(id, btn) {
   btn.classList.add('active');
 }
 
-// Form submit feedback
+// ─── FORM SUBMIT ───
 function handleSubmit(btn) {
   btn.textContent = 'Sending...';
   btn.style.opacity = '0.7';
@@ -2257,7 +1711,7 @@ function handleSubmit(btn) {
   }, 1200);
 }
 
-// Scroll reveal
+// ─── SCROLL REVEAL ───
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -2265,24 +1719,8 @@ const observer = new IntersectionObserver((entries) => {
       observer.unobserve(entry.target);
     }
   });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// Animated number count-up on hero stats
-const statValues = document.querySelectorAll('.stat-value');
-const statObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.style.opacity = '0';
-      setTimeout(() => {
-        entry.target.style.transition = 'opacity 0.5s';
-        entry.target.style.opacity = '1';
-      }, 100);
-    }
-  });
-}, { threshold: 0.5 });
-statValues.forEach(el => statObserver.observe(el));
 </script>
 </body>
 </html>
